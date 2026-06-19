@@ -333,17 +333,6 @@ The limitation of this is that certificates used for TLS in the
 presence of wildcards may only be constrained reliably by using only
 permitted subtree entries.
 
-## The new critical extension approach
-
-This document defines a new critical extension with fully
-specified semantics. The criticality of {{RFC5280}}'s
-`nameConstraints` extension guarantees the extension is processed
-but not what semantics are applied, and those semantics may shift
-with later specifications. A new extension with both properties
-ties the two together: a verifier either rejects the certificate
-because the extension is critical, or applies the rules in this
-document because no other rules exist.
-
 # Acknowledgments
 {:numbered="false"}
 
