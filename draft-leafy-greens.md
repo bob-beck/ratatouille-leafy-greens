@@ -111,10 +111,12 @@ the verifiers that will see its certificates. This document
 defines End Entity Name Restrictions (EENR), a new critical
 extension for CA certificates that constrains the `dNSName`
 Subject Alternative Names which may appear in end entity
-certificates issued beneath the CA. The extension is scoped to
-TLS client and TLS server certificate validation only, so that
-its matching semantics can be specified completely within this
-document rather than deferred to other specifications.
+certificates issued beneath the CA. EENR is scoped exclusively to
+TLS client and TLS server authentication; this document does not
+address the analogous ambiguity for other application protocols
+that use X.509 certificates with `dNSName` SANs. Confining the
+extension to TLS allows its matching semantics to be specified
+completely within this document.
 
 # Conventions and Definitions
 
