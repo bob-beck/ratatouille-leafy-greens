@@ -1329,9 +1329,7 @@ certification path. If <code>permittedSubtrees</code> is provided, it <span clas
 contain at least one entry; if <code>excludedSubtrees</code> is provided, it
 <span class="bcp14">MUST</span> contain at least one entry.<a href="#section-3.2-2" class="pilcrow">¶</a></p>
 <p id="section-3.2-3">The <code>dNSName</code> value carried in the <code>base</code> field of each
-<code>GeneralSubtree</code> <span class="bcp14">MUST NOT</span> contain the DNS wildcard character <code>*</code>.
-Permitting wildcards in subtree entries would reintroduce the
-matching ambiguity this extension is intended to avoid.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
+<code>GeneralSubtree</code> <span class="bcp14">MUST NOT</span> contain the DNS wildcard character <code>*</code>.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="propagation-through-ca-certificates">
@@ -1351,16 +1349,6 @@ path <span class="bcp14">MAY</span> use <code>permittedSubtrees</code>. In any C
 certification path contains an ancestor bearing the extension,
 the <code>permittedSubtrees</code> field <span class="bcp14">MUST</span> be absent; subsequent CAs <span class="bcp14">MAY</span>
 narrow the name space further by providing <code>excludedSubtrees</code>.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
-<p id="section-3.3-4">A CA certificate that bears the extension with neither
-<code>permittedSubtrees</code> nor <code>excludedSubtrees</code> present declares no
-additional name-space restriction, but causes the restrictions on
-end entity certificates defined in
-<a href="#restrictions-on-end-entity-certificates" class="auto internal xref">Section 3.5</a> to apply by the
-extension's presence in the path.<a href="#section-3.3-4" class="pilcrow">¶</a></p>
-<p id="section-3.3-5">Applications conforming to this profile <span class="bcp14">MUST</span> be able to process
-end entity name restrictions that are imposed on the <code>dNSName</code>
-name form, and <span class="bcp14">MUST</span> either process the constraint or reject the
-certificate.<a href="#section-3.3-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="relationship-to-rfc5280-name-constraints">
@@ -1432,10 +1420,8 @@ restrictions accumulated from all End Entity Name Restrictions
 extensions in the certification path as follows:<a href="#section-3.6-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.6-2.1">
-            <p id="section-3.6-2.1.1">If any <code>permittedSubtrees</code> was provided (it can only have been
-provided by the highest CA in the path that bears the extension),
-the <code>dNSName</code> entry <span class="bcp14">MUST</span> match at least one of those permitted
-subtree base values.<a href="#section-3.6-2.1.1" class="pilcrow">¶</a></p>
+            <p id="section-3.6-2.1.1">If any <code>permittedSubtrees</code> was provided, the <code>dNSName</code> entry
+<span class="bcp14">MUST</span> match at least one of those permitted subtree base values.<a href="#section-3.6-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.6-2.2">
             <p id="section-3.6-2.2.1">For every <code>excludedSubtrees</code> entry provided by any CA in the
@@ -1447,9 +1433,8 @@ match that excluded subtree base value.<a href="#section-3.6-2.2.1" class="pilcr
 the reference identifier, and the end entity certificate's
 <code>dNSName</code> entry (which may contain a wildcard in its leftmost
 label) as the presented identifier, per <span>[<a href="#RFC9525" class="cite xref">RFC9525</a>]</span> section 6.3.<a href="#section-3.6-3" class="pilcrow">¶</a></p>
-<p id="section-3.6-4">A <code>dNSName</code> entry that fails the permitted test, or matches an
-excluded test, renders the certification path invalid; the
-verifier <span class="bcp14">MUST</span> reject it.<a href="#section-3.6-4" class="pilcrow">¶</a></p>
+<p id="section-3.6-4">A verifier <span class="bcp14">MUST</span> reject any certification path for which a
+<code>dNSName</code> entry fails this evaluation.<a href="#section-3.6-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1460,16 +1445,14 @@ verifier <span class="bcp14">MUST</span> reject it.<a href="#section-3.6-4" clas
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
 <p id="section-4-1">The End Entity Name Restrictions extension is a critical X.509
-extension. By <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> section 4.2, a verifier that does not
-recognize a critical extension <span class="bcp14">MUST</span> reject the certificate. A
-verifier that processes a certification path containing this
-extension therefore either implements the matching semantics in
-this document exactly, or rejects the path; no third option exists
-in which the extension is silently misinterpreted. This is what
-gives the extension its value as a security control: a CA may rely
-on it to restrict the <code>dNSName</code> Subject Alternative Names that may
-appear in end entity certificates issued beneath it, for purposes
-of TLS client and TLS server authentication.<a href="#section-4-1" class="pilcrow">¶</a></p>
+extension. A verifier processing a certification path containing
+the extension either implements the matching semantics defined
+here exactly or rejects the path; no third option exists in which
+the extension is silently misinterpreted. This is what allows a
+CA to rely on it as a security control restricting the <code>dNSName</code>
+Subject Alternative Names in end entity certificates issued
+beneath it, for purposes of TLS client and TLS server
+authentication.<a href="#section-4-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana-considerations">
