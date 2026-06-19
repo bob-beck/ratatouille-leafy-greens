@@ -164,8 +164,6 @@ MUST contain at least one entry.
 
 The `dNSName` value carried in the `base` field of each
 `GeneralSubtree` MUST NOT contain the DNS wildcard character `*`.
-Permitting wildcards in subtree entries would reintroduce the
-matching ambiguity this extension is intended to avoid.
 
 ## Propagation Through CA Certificates
 
@@ -183,18 +181,6 @@ path MAY use `permittedSubtrees`. In any CA certificate whose
 certification path contains an ancestor bearing the extension,
 the `permittedSubtrees` field MUST be absent; subsequent CAs MAY
 narrow the name space further by providing `excludedSubtrees`.
-
-A CA certificate that bears the extension with neither
-`permittedSubtrees` nor `excludedSubtrees` present declares no
-additional name-space restriction, but causes the restrictions on
-end entity certificates defined in
-{{restrictions-on-end-entity-certificates}} to apply by the
-extension's presence in the path.
-
-Applications conforming to this profile MUST be able to process
-end entity name restrictions that are imposed on the `dNSName`
-name form, and MUST either process the constraint or reject the
-certificate.
 
 ## Relationship to RFC 5280 Name Constraints {#relationship-to-rfc5280-name-constraints}
 
@@ -244,10 +230,8 @@ subject alternative name extension, the verifier MUST evaluate the
 restrictions accumulated from all End Entity Name Restrictions
 extensions in the certification path as follows:
 
- * If any `permittedSubtrees` was provided (it can only have been
-   provided by the highest CA in the path that bears the extension),
-   the `dNSName` entry MUST match at least one of those permitted
-   subtree base values.
+ * If any `permittedSubtrees` was provided, the `dNSName` entry
+   MUST match at least one of those permitted subtree base values.
 
  * For every `excludedSubtrees` entry provided by any CA in the
    path that bears the extension, the `dNSName` entry MUST NOT
@@ -258,23 +242,20 @@ the reference identifier, and the end entity certificate's
 `dNSName` entry (which may contain a wildcard in its leftmost
 label) as the presented identifier, per {{RFC9525}} section 6.3.
 
-A `dNSName` entry that fails the permitted test, or matches an
-excluded test, renders the certification path invalid; the
-verifier MUST reject it.
+A verifier MUST reject any certification path for which a
+`dNSName` entry fails this evaluation.
 
 # Security Considerations
 
 The End Entity Name Restrictions extension is a critical X.509
-extension. By {{RFC5280}} section 4.2, a verifier that does not
-recognize a critical extension MUST reject the certificate. A
-verifier that processes a certification path containing this
-extension therefore either implements the matching semantics in
-this document exactly, or rejects the path; no third option exists
-in which the extension is silently misinterpreted. This is what
-gives the extension its value as a security control: a CA may rely
-on it to restrict the `dNSName` Subject Alternative Names that may
-appear in end entity certificates issued beneath it, for purposes
-of TLS client and TLS server authentication.
+extension. A verifier processing a certification path containing
+the extension either implements the matching semantics defined
+here exactly or rejects the path; no third option exists in which
+the extension is silently misinterpreted. This is what allows a
+CA to rely on it as a security control restricting the `dNSName`
+Subject Alternative Names in end entity certificates issued
+beneath it, for purposes of TLS client and TLS server
+authentication.
 
 # IANA Considerations  {#iana-considerations}
 
