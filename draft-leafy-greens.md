@@ -320,6 +320,15 @@ the prohibition. Certificates issued under the old understanding
 remain vulnerable in proportion to the verifier population that
 has not been updated.
 
+## Just don't fix it
+
+Acknowledge the possibility that with the default {{RFC5280}} matching
+semantics, wildcards will not match names in an excluded subtree name
+constraint that could in turn match the wildcard and be accepted for a
+TLS connection.  Document that excluded name constraints should not be
+relied on to limit what a CA can sign for in any PKI where wildcards
+are not excluded from use by some other means.
+
 ## The new critical extension approach
 
 This document defines a new critical extension with fully
