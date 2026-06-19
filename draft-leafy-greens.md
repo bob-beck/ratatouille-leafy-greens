@@ -241,10 +241,18 @@ extensions in the certification path as follows:
    path that bears the extension, the `dNSName` entry MUST NOT
    match that excluded subtree base value.
 
-A subtree base value (which contains no wildcard) is treated as
-the reference identifier, and the end entity certificate's
-`dNSName` entry (which may contain a wildcard in its leftmost
-label) as the presented identifier, per {{RFC9525}} section 6.3.
+An excluded subtree base value (which contains no wildcard) is treated
+as the reference identifier, and the end entity certificate's
+`dNSName` entry (which may contain a wildcard in its leftmost label)
+as the presented identifier, with the wildcard semantics as per
+{{RFC9525}} section 6.3.
+
+An permitted subtree base value (which contains no wildcard) is treated
+as the reference identifier, and the end entity certificate's
+`dNSName` entry (which may contain a wildcard in its leftmost label)
+as the presented identifier, as per {{RFC9525}} section 6.3, excluding
+the wildcard semantics, meaning the wildcard label has no special meaning
+other than it is a label.
 
 A verifier MUST reject any certification path for which a
 `dNSName` entry fails this evaluation.
