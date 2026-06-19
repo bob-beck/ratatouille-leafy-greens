@@ -329,6 +329,10 @@ TLS connection.  Document that excluded name constraints should not be
 relied on to limit what a CA can sign for in any PKI where wildcards
 are not excluded from use by some other means.
 
+The limitation of this is that certificates used for TLS in the
+presence of wildcards may only be constrained reliably by using only
+permitted subtree entries.
+
 ## The new critical extension approach
 
 This document defines a new critical extension with fully
