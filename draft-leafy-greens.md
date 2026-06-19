@@ -99,9 +99,11 @@ and any verifier predating such a clarification would continue to
 do so. Unless the CA can constrain its certificates to verifiers
 known to apply specific semantics, it cannot ensure that the
 verifiers eventually consuming them share any single interpretation.
-Criticality does not help: a verifier that processes the extension
-under one set of semantics has no way to know that other semantics
-were intended.
+Criticality does not remedy this: {{RFC5280}} deferred the wildcard
+portion of `nameConstraints` semantics, so the meaning of this
+critical extension can change without changing {{RFC5280}}, and a
+verifier processing it conformantly may be applying semantics no
+longer current.
 
 A PKI that depends on `excludedSubtrees` for security therefore
 cannot rely on those exclusions being enforced consistently across
@@ -274,6 +276,50 @@ RFC number upon publication.
 
 
 --- back
+
+# Alternatives Considered  {#alternatives-considered}
+
+## Amending RFC 5280 or RFC 9525 to define wildcard semantics
+
+The wildcard ambiguity could in principle be addressed by an
+update to {{RFC5280}} section 4.2.1.10's matching algorithm, or
+by an update to {{RFC9525}} to extend its wildcard semantics to
+name constraint matching (which {{RFC9525}} section 1.2 currently
+defers to {{RFC5280}}).
+
+Either approach fails to give a CA reliable control over how its
+certificates will be evaluated. A verifier conforming to the
+specification as written today is not made non-conformant by any
+future update; a CA issuing a certificate cannot ensure that the
+verifiers consuming it have adopted the updated semantics, and
+would have no way to detect a verifier still applying the
+original algorithm.
+
+## Prohibiting wildcards in chains with excluded dNSName constraints
+
+The security failure caused by the matching ambiguity arises only
+when both wildcard `dNSName` SAN entries and `dNSName`
+`excludedSubtrees` are present in the same certification path:
+literal {{RFC5280}} matching can accept a wildcard SAN whose TLS
+expansion covers a name the excluded subtree was intended to
+prevent. An {{RFC5280}} amendment could prohibit this combination.
+
+Such an amendment suffers the same deployment problem as defining
+new semantics: a verifier that has not adopted it will not enforce
+the prohibition. Certificates issued under the old understanding
+remain vulnerable in proportion to the verifier population that
+has not been updated.
+
+## The new critical extension approach
+
+This document defines a new critical extension with fully
+specified semantics. The criticality of {{RFC5280}}'s
+`nameConstraints` extension guarantees the extension is processed
+but not what semantics are applied, and those semantics may shift
+with later specifications. A new extension with both properties
+ties the two together: a verifier either rejects the certificate
+because the extension is critical, or applies the rules in this
+document because no other rules exist.
 
 # Acknowledgments
 {:numbered="false"}
