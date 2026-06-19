@@ -1447,12 +1447,19 @@ path that bears the extension, the <code>dNSName</code> entry <span class="bcp14
 match that excluded subtree base value.<a href="#section-3.6-2.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-3.6-3">A subtree base value (which contains no wildcard) is treated as
-the reference identifier, and the end entity certificate's
-<code>dNSName</code> entry (which may contain a wildcard in its leftmost
-label) as the presented identifier, per <span>[<a href="#RFC9525" class="cite xref">RFC9525</a>]</span> section 6.3.<a href="#section-3.6-3" class="pilcrow">¶</a></p>
-<p id="section-3.6-4">A verifier <span class="bcp14">MUST</span> reject any certification path for which a
-<code>dNSName</code> entry fails this evaluation.<a href="#section-3.6-4" class="pilcrow">¶</a></p>
+<p id="section-3.6-3">An excluded subtree base value (which contains no wildcard) is treated
+as the reference identifier, and the end entity certificate's
+<code>dNSName</code> entry (which may contain a wildcard in its leftmost label)
+as the presented identifier, with the wildcard semantics as per
+<span>[<a href="#RFC9525" class="cite xref">RFC9525</a>]</span> section 6.3.<a href="#section-3.6-3" class="pilcrow">¶</a></p>
+<p id="section-3.6-4">An permitted subtree base value (which contains no wildcard) is treated
+as the reference identifier, and the end entity certificate's
+<code>dNSName</code> entry (which may contain a wildcard in its leftmost label)
+as the presented identifier, as per <span>[<a href="#RFC9525" class="cite xref">RFC9525</a>]</span> section 6.3, excluding
+the wildcard semantics, meaning the wildcard label has no special meaning
+other than it is a label.<a href="#section-3.6-4" class="pilcrow">¶</a></p>
+<p id="section-3.6-5">A verifier <span class="bcp14">MUST</span> reject any certification path for which a
+<code>dNSName</code> entry fails this evaluation.<a href="#section-3.6-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
