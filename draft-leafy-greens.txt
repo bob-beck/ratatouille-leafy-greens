@@ -87,7 +87,8 @@ Table of Contents
      A.1.  Amending RFC 5280 or RFC 9525 to define wildcard semantics
      A.2.  Prohibiting wildcards in chains with excluded dNSName
            constraints
-     A.3.  The new critical extension approach
+     A.3.  Just don't fix it
+     A.4.  The new critical extension approach
    Acknowledgments
    Author's Address
 
@@ -374,7 +375,16 @@ A.2.  Prohibiting wildcards in chains with excluded dNSName constraints
    vulnerable in proportion to the verifier population that has not been
    updated.
 
-A.3.  The new critical extension approach
+A.3.  Just don't fix it
+
+   Acknowledge the possibility that with the default [RFC5280] matching
+   semantics, wildcards will not match names in an excluded subtree name
+   constraint that could in turn match the wildcard and be accepted for
+   a TLS connection.  Document that excluded name constraints should not
+   be relied on to limit what a CA can sign for in any PKI where
+   wildcards are not excluded from use by some other means.
+
+A.4.  The new critical extension approach
 
    This document defines a new critical extension with fully specified
    semantics.  The criticality of [RFC5280]'s nameConstraints extension

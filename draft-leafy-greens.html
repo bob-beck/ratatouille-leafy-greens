@@ -1213,7 +1213,10 @@ TLS client and TLS server authentication.<a href="#section-abstract-1" class="pi
                 <p id="section-toc.1-1.7.2.2.1"><a href="#appendix-A.2" class="auto internal xref">A.2</a>.  <a href="#name-prohibiting-wildcards-in-ch" class="internal xref">Prohibiting wildcards in chains with excluded dNSName constraints</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.3">
-                <p id="section-toc.1-1.7.2.3.1"><a href="#appendix-A.3" class="auto internal xref">A.3</a>.  <a href="#name-the-new-critical-extension-" class="internal xref">The new critical extension approach</a></p>
+                <p id="section-toc.1-1.7.2.3.1"><a href="#appendix-A.3" class="auto internal xref">A.3</a>.  <a href="#name-just-dont-fix-it" class="internal xref">Just don't fix it</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.4">
+                <p id="section-toc.1-1.7.2.4.1"><a href="#appendix-A.4" class="auto internal xref">A.4</a>.  <a href="#name-the-new-critical-extension-" class="internal xref">The new critical extension approach</a></p>
 </li>
             </ul>
 </li>
@@ -1578,19 +1581,32 @@ remain vulnerable in proportion to the verifier population that
 has not been updated.<a href="#appendix-A.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="the-new-critical-extension-approach">
+<div id="just-dont-fix-it">
 <section id="appendix-A.3">
-        <h3 id="name-the-new-critical-extension-">
-<a href="#appendix-A.3" class="section-number selfRef">A.3. </a><a href="#name-the-new-critical-extension-" class="section-name selfRef">The new critical extension approach</a>
+        <h3 id="name-just-dont-fix-it">
+<a href="#appendix-A.3" class="section-number selfRef">A.3. </a><a href="#name-just-dont-fix-it" class="section-name selfRef">Just don't fix it</a>
         </h3>
-<p id="appendix-A.3-1">This document defines a new critical extension with fully
+<p id="appendix-A.3-1">Acknowledge the possibility that with the default <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> matching
+semantics, wildcards will not match names in an excluded subtree name
+constraint that could in turn match the wildcard and be accepted for a
+TLS connection.  Document that excluded name constraints should not be
+relied on to limit what a CA can sign for in any PKI where wildcards
+are not excluded from use by some other means.<a href="#appendix-A.3-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="the-new-critical-extension-approach">
+<section id="appendix-A.4">
+        <h3 id="name-the-new-critical-extension-">
+<a href="#appendix-A.4" class="section-number selfRef">A.4. </a><a href="#name-the-new-critical-extension-" class="section-name selfRef">The new critical extension approach</a>
+        </h3>
+<p id="appendix-A.4-1">This document defines a new critical extension with fully
 specified semantics. The criticality of <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>'s
 <code>nameConstraints</code> extension guarantees the extension is processed
 but not what semantics are applied, and those semantics may shift
 with later specifications. A new extension with both properties
 ties the two together: a verifier either rejects the certificate
 because the extension is critical, or applies the rules in this
-document because no other rules exist.<a href="#appendix-A.3-1" class="pilcrow">¶</a></p>
+document because no other rules exist.<a href="#appendix-A.4-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
