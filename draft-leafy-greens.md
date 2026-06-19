@@ -131,8 +131,8 @@ following object identifier:
 The extension SHALL be encoded as follows:
 
    EndEntityNameRestrictions ::= SEQUENCE {
-       permittedSubtrees       [0]     GeneralSubtrees OPTIONAL,
-       excludedSubtrees        [1]     GeneralSubtrees OPTIONAL }
+       permittedSubtrees       \[0]     GeneralSubtrees OPTIONAL,
+       excludedSubtrees        \[1]     GeneralSubtrees OPTIONAL }
 
 The `GeneralSubtrees`, `GeneralSubtree`, and `BaseDistance` types
 are defined in {{RFC5280}} section 4.2.1.10 and are reused here
