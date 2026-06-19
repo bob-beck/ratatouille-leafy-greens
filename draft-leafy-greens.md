@@ -3,7 +3,7 @@ title: "End Entity Name Restrictions"
 abbrev: "EENR"
 category: info
 docname: draft-leafy-greens-latest
-# This is not a PLANT pun.
+# Greenlighting Names for Leafs
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
 date:
