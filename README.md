@@ -18,7 +18,7 @@ This affects the usefulness of using name constraints to constain a CA cert from
 in the presence of wildcards.
 
 We fix this by defining a new extension to provide name restriction semantics via a different critical extension, limited in scope
-only for TLS, and only for SAN DNS names, with fully defined semantics.
+only for TLS, and only for SAN DNS names in End Entity certificates, with fully defined semantics.
 
 
 ## Contributing
