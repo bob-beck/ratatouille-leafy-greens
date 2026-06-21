@@ -1,26 +1,13 @@
 <!-- regenerate: on (set to off if you edit this file) -->
 
-## Leafy Greens (End Entity Name Restirictions)
+# Leafy Greens - End Entity Name Restrictions
 
-Greenlighting names in leaves.
-
-(yes it should be renamed, please bikeshed)
+This is the working area for the individual Internet-Draft, "Leafy Greens - End Entity Name Restrictions".
 
 * [Editor's Copy](https://bob-beck.github.io/ratatouille-leafy-greens/#go.draft-leafy-greens.html)
 * [Datatracker Page](https://datatracker.ietf.org/doc/draft-leafy-greens)
 * [Individual Draft](https://datatracker.ietf.org/doc/html/draft-leafy-greens)
 * [Compare Editor's Copy to Individual Draft](https://bob-beck.github.io/ratatouille-leafy-greens/#go.draft-leafy-greens.diff)
-
-TL;DR - 5280 defines name constraints as a critical extension, which, for wildcards in SAN DNS names, can change meaning over time.
-
-The result of this is that you can not trust that two applications recognizing the critical extension recognize it with
-the same semantics.
-
-This affects the usefulness of using name constraints to constain a CA cert from signing for certain SAN DNSnanmes with excluded subtrees
-in the presence of wildcards.
-
-We fix this by defining a new extension to provide name restriction semantics via a different critical extension, limited in scope
-only for TLS, and only for SAN DNS names in End Entity certificates, with fully defined semantics.
 
 
 ## Contributing
