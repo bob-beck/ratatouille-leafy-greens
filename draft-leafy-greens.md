@@ -3,24 +3,23 @@ title: "Leafy Greens - End Entity Name Restrictions"
 abbrev: "EENR"
 category: info
 docname: draft-leafy-greens-latest
-# Greenlighting Names for Leafs
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
 date:
 consensus: true
 v: 3
-# area: Security
-# workgroup: TLS?
+area: Security
+workgroup: TLS?
 keyword:
- - TLS
- - PKIX
- - X.509
- - name constraints
+  TLS
+  PKIX
+  X.509
+  name constraints
 venue:
-#  group: TBD?
-#  type: Working Group
-#  mail: beck@openssl.org
-#  arch: https://example.com/WG
+  group: TBD?
+  type: Working Group
+  mail: beck@openssl.org
+  arch: https://example.com/WG
   github: "bob-beck/ratatouille-leafy-greens"
   latest: "https://bob-beck.github.io/ratatouille-leafy-greens/draft-leafy-greens.html"
 
@@ -45,6 +44,8 @@ informative:
 ...
 
 --- abstract
+
+
 
 The interaction of name constraint matching in {{RFC5280}} and
 wildcard subject alternative names creates a gap in which an
@@ -134,7 +135,7 @@ completely within this document.
 
 # The End Entity Name Restrictions Extension
 
-## Syntax {#syntax}
+## Syntax
 
 The End Entity Name Restrictions extension is identified by the
 following object identifier:
@@ -197,7 +198,7 @@ certification path contains an ancestor bearing the extension,
 the `permittedSubtrees` field MUST be absent; subsequent CAs MAY
 narrow the name space further by providing `excludedSubtrees`.
 
-## Relationship to RFC 5280 Name Constraints {#relationship-to-rfc5280-name-constraints}
+## Relationship to RFC 5280 Name Constraints
 
 The matching semantics defined by this document for `dNSName`
 entries differ from those of {{RFC5280}} section 4.2.1.10, and a
@@ -209,7 +210,7 @@ NOT include a `nameConstraints` extension whose `permittedSubtrees`
 or `excludedSubtrees` contains a `dNSName` form. A verifier MUST
 reject any certification path that violates this restriction.
 
-## Restrictions on End Entity Certificates {#restrictions-on-end-entity-certificates}
+## Restrictions on End Entity Certificates
 
 When the End Entity Name Restrictions extension is present in any
 CA certificate in a certification path, every end entity certificate
@@ -238,7 +239,7 @@ in that path MUST satisfy each of the following restrictions:
 A verifier MUST reject any certification path containing an end
 entity certificate that fails any of these restrictions.
 
-## Matching Semantics {#matching-semantics}
+## Matching Semantics
 
 For each `dNSName` entry present in the end entity certificate's
 subject alternative name extension, the verifier MUST evaluate the
@@ -280,7 +281,7 @@ Subject Alternative Names in end entity certificates issued
 beneath it, for purposes of TLS client and TLS server
 authentication.
 
-# IANA Considerations  {#iana-considerations}
+# IANA Considerations
 
 This document defines one new object identifier for the End Entity
 Name Restrictions extension. IANA is requested to assign a value
@@ -298,7 +299,7 @@ RFC number upon publication.
 
 --- back
 
-# Alternatives Considered  {#alternatives-considered}
+# Alternatives Considered
 
 ## Amending RFC 5280 or RFC 9525 to define wildcard semantics
 
