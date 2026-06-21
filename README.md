@@ -16,7 +16,7 @@ TL;DR - 5280 defines name constraints as a critical extension, which, for wildca
 The result of this is that you can not trust that two applications recognizing the critical extension recognize it with
 the same semantics.
 
-This affects the usefulness of using name constraints to constain a CA cert from signing for certain SAN DNSnanmes with excluded subtress
+This affects the usefulness of using name constraints to constain a CA cert from signing for certain SAN DNSnanmes with excluded subtrees
 in the presence of wildcards.
 
 We fix this by defining a new extension to provide name restriction semantics via a different critical extension, limited in scope
