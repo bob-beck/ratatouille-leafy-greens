@@ -1,7 +1,7 @@
 ---
 title: "Leafy Greens - End Entity Name Restrictions"
 abbrev: "EENR"
-category: info
+category: std
 docname: draft-leafy-greens-latest
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
