@@ -4,7 +4,7 @@
 
 TLS?                                                             B. Beck
 Internet-Draft                                                   OpenSSL
-Intended status: Informational                              M. Ounsworth
+Intended status: Standards Track                            M. Ounsworth
 Expires: 23 December 2026                        Cryptic Forest Software
                                                             21 June 2026
 
