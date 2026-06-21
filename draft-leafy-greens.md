@@ -29,6 +29,10 @@ author:
     fullname: "Bob Beck"
     organization: OpenSSL
     email: "beck@obtuse.com"
+-
+    fullname: "Mike Ounsworth"
+    organization: Cryptic Forest Software
+    email: mike@ounsworth.ca
 
 normative:
   RFC5280:
@@ -63,10 +67,10 @@ any certificate beneath it in a certification path. Enforcement
 is performed during certification-path validation, per {{RFC5280}}
 sections 6.1.3 and 6.1.4.
 
-For `dNSName` entries, {{RFC5280}}'s matching algorithm is purely
+For `dNSName` `SubjectAlternativeName` entries, {{RFC5280}}'s matching algorithm is purely
 lexical: *"Any DNS name that can be constructed by simply adding
 zero or more labels to the left-hand side of the name satisfies
-the name constraint."* Read literally, this treats `*` as an
+the name constraint."* is read literally, this treats `*` as an
 ordinary label and makes `*.example.com` satisfy a constraint of
 `example.com` exactly as `host.example.com` does. {{RFC5280}}
 section 4.2.1.6 separately leaves the semantics of wildcards in
@@ -74,8 +78,11 @@ subject alternative names undefined, requiring any application
 that uses them to define the semantics itself. {{RFC9525}} supplies
 wildcard semantics for one application context, matching presented
 identifiers against reference identifiers in TLS, but its
-section 1.2 explicitly defers name constraints back to {{RFC5280}}.
+section 1.2 explicitly defers name constraints back to {{RFC5280}},
+creating a situation where neither specification defines its
+semantics.
 
+Name constraints can be used as either inclusionary or inclusionary.
 For example, consider a CA certificate with an excluded constraint
 of `foo.example.com`, signing an end entity certificate with a SAN
 of `*.example.com`. The apparent intent of the constraint is to
@@ -155,7 +162,9 @@ The IANA registration request for `id-pe-eenr` appears in
 ## Use in CA Certificates
 
 The End Entity Name Restrictions extension MUST be used only in a
-CA certificate. Conforming CAs MUST mark the extension as critical.
+CA certificate; it is an error to include it in a certificate
+with `basicConstraints.cA=FALSE`.
+Conforming CAs MUST mark the extension as critical.
 
 Both `permittedSubtrees` and `excludedSubtrees` are OPTIONAL. If
 both are absent, the extension is present but conveys no
@@ -243,16 +252,16 @@ extensions in the certification path as follows:
 
 An excluded subtree base value (which contains no wildcard) is treated
 as the reference identifier, and the end entity certificate's
-`dNSName` entry (which may contain a wildcard in its leftmost label)
+`dNSName` entry (which is allowed to contain a wildcard in its leftmost label)
 as the presented identifier, with the wildcard semantics as per
 {{RFC9525}} section 6.3.
 
-An permitted subtree base value (which contains no wildcard) is treated
+A permitted subtree base value (which contains no wildcard) is treated
 as the reference identifier, and the end entity certificate's
-`dNSName` entry (which may contain a wildcard in its leftmost label)
+`dNSName` entry (which is allowed to contain a wildcard in its leftmost label)
 as the presented identifier, as per {{RFC9525}} section 6.3, excluding
 the wildcard semantics, meaning the wildcard label has no special meaning
-other than it is a label.
+other than as a literal label.
 
 A verifier MUST reject any certification path for which a
 `dNSName` entry fails this evaluation.
