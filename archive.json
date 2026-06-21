@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-06-18T06:57:02.092620+00:00",
+  "timestamp": "2026-06-21T01:00:46.923252+00:00",
   "repo": "bob-beck/ratatouille-leafy-greens",
   "labels": [
     {
@@ -49,6 +49,39 @@
       "color": "ffffff"
     }
   ],
-  "issues": [],
+  "issues": [
+    {
+      "number": 1,
+      "id": "I_kwDOSVR4Ic8AAAABGFiZ_w",
+      "title": "matching  specifics and wording for the difference in checking permitted vs excluded",
+      "url": "https://github.com/bob-beck/ratatouille-leafy-greens/issues/1",
+      "state": "OPEN",
+      "author": "bob-beck",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "I sort of landed on \"treat the wildcard as if wildcards weren't allowed\" and refer to 9525 as I have been for permitted,\n\nas opposed to spelling it all out and just saying \"remove the wildcard label when matching permitted\" \n\nI think this is the equivalent with less repetition from 9525 the way I have it, but I may be wrong.  \n\nvery happy for thoughts on better wording.",
+      "createdAt": "2026-06-19T20:35:54Z",
+      "updatedAt": "2026-06-19T20:35:54Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 2,
+      "id": "I_kwDOSVR4Ic8AAAABGFj0-g",
+      "title": "Should this even see the light of day?",
+      "url": "https://github.com/bob-beck/ratatouille-leafy-greens/issues/2",
+      "state": "OPEN",
+      "author": "bob-beck",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "I wrote it all down because I was annoyed, and outline the why this way in the alternatives. \n\nIf there's a reasonable way to fix the existing stuff and *somehow* reliably gate on upcoming \"new\" changes, I'm all ears but I have not pondered that myself. \n\nObviously, if we're only worried about this for a PLANTS/MTC type certificate in the future, we could attempt to gate something on support of that and we don't care about legacy goo, but it's not clear to me that there's a clean way to do that, and that it would even matter - frankly using wildcards in the public web pki should probably just die and then the problem becomes irrelevant.\n\nSo I'm still on the cleanest way to provide a way is to use a new oid.  A CA that cares includes it and it has to be supported. \n\nBut I'd love a simpler way :) \n\n",
+      "createdAt": "2026-06-19T20:41:20Z",
+      "updatedAt": "2026-06-19T20:41:20Z",
+      "closedAt": null,
+      "comments": []
+    }
+  ],
   "pulls": []
 }
