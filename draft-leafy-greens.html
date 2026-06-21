@@ -1246,7 +1246,7 @@ sections 6.1.3 and 6.1.4.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">For <code>dNSName</code> <code>SubjectAlternativeName</code> entries, <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>'s matching algorithm is purely
 lexical: <em>"Any DNS name that can be constructed by simply adding
 zero or more labels to the left-hand side of the name satisfies
-the name constraint."</em> is read literally, this treats <code>*</code> as an
+the name constraint."</em> Read literally, this treats <code>*</code> as an
 ordinary label and makes <code>*.example.com</code> satisfy a constraint of
 <code>example.com</code> exactly as <code>host.example.com</code> does. <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>
 section 4.2.1.6 separately leaves the semantics of wildcards in
@@ -1257,7 +1257,7 @@ identifiers against reference identifiers in TLS, but its
 section 1.2 explicitly defers name constraints back to <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>,
 creating a situation where neither specification defines its
 semantics.<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3">Name constraints can be used as either inclusionary or inclusionary.
+<p id="section-1-3">Name constraints can be used as either inclusionary or exclusionary.
 For example, consider a CA certificate with an excluded constraint
 of <code>foo.example.com</code>, signing an end entity certificate with a SAN
 of <code>*.example.com</code>. The apparent intent of the constraint is to
@@ -1427,7 +1427,7 @@ authentication.<a href="#section-3.5-2.2.2.2.1" class="pilcrow">¶</a></p>
             <p id="section-3.5-2.3.1">The subject alternative name extension <span class="bcp14">MUST</span> be present and <span class="bcp14">MUST</span>
 contain at least one <code>dNSName</code> entry. The number of <code>dNSName</code>
 entries <span class="bcp14">SHOULD NOT</span> exceed 16; conforming applications <span class="bcp14">MAY</span> reject
-certificates with more as a DOS prevention.<a href="#section-3.5-2.3.1" class="pilcrow">¶</a></p>
+certificates with more to prevent denial-of-service.<a href="#section-3.5-2.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.5-2.4">
             <p id="section-3.5-2.4.1">Each <code>dNSName</code> entry in the subject alternative name extension

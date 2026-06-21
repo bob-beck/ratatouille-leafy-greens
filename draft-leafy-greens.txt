@@ -107,9 +107,9 @@ Table of Contents
    For dNSName SubjectAlternativeName entries, [RFC5280]'s matching
    algorithm is purely lexical: _"Any DNS name that can be constructed
    by simply adding zero or more labels to the left-hand side of the
-   name satisfies the name constraint."_ is read literally, this treats
-   * as an ordinary label and makes *.example.com satisfy a constraint
-   of example.com exactly as host.example.com does.  [RFC5280] section
+   name satisfies the name constraint."_ Read literally, this treats *
+   as an ordinary label and makes *.example.com satisfy a constraint of
+   example.com exactly as host.example.com does.  [RFC5280] section
    4.2.1.6 separately leaves the semantics of wildcards in subject
    alternative names undefined, requiring any application that uses them
    to define the semantics itself.  [RFC9525] supplies wildcard
@@ -118,7 +118,7 @@ Table of Contents
    defers name constraints back to [RFC5280], creating a situation where
    neither specification defines its semantics.
 
-   Name constraints can be used as either inclusionary or inclusionary.
+   Name constraints can be used as either inclusionary or exclusionary.
    For example, consider a CA certificate with an excluded constraint of
    foo.example.com, signing an end entity certificate with a SAN of
    *.example.com.  The apparent intent of the constraint is to prevent
@@ -262,7 +262,7 @@ Table of Contents
    *  The subject alternative name extension MUST be present and MUST
       contain at least one dNSName entry.  The number of dNSName entries
       SHOULD NOT exceed 16; conforming applications MAY reject
-      certificates with more as a DOS prevention.
+      certificates with more to prevent denial-of-service.
 
    *  Each dNSName entry in the subject alternative name extension MUST
       conform to [RFC9525] section 6.3.
