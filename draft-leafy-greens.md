@@ -231,7 +231,7 @@ in that path MUST satisfy each of the following restrictions:
  * The subject alternative name extension MUST be present and MUST
    contain at least one `dNSName` entry. The number of `dNSName`
    entries SHOULD NOT exceed 16; conforming applications MAY reject
-   certificates with more.
+   certificates with more as a DOS prevention.
 
  * Each `dNSName` entry in the subject alternative name extension
    MUST conform to {{RFC9525}} section 6.3.
