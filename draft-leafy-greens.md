@@ -1,5 +1,5 @@
 ---
-title: "End Entity Name Restrictions"
+title: "Leafy Greens - End Entity Name Restrictions"
 abbrev: "EENR"
 category: info
 docname: draft-leafy-greens-latest
@@ -9,30 +9,32 @@ number:
 date:
 consensus: true
 v: 3
-# area: AREA
-# workgroup: WG Working Group
+# area: Security
+# workgroup: TLS?
 keyword:
  - TLS
  - PKIX
  - X.509
  - name constraints
 venue:
-#  group: WG
+#  group: TBD?
 #  type: Working Group
-#  mail: WG@example.com
+#  mail: beck@openssl.org
 #  arch: https://example.com/WG
   github: "bob-beck/ratatouille-leafy-greens"
   latest: "https://bob-beck.github.io/ratatouille-leafy-greens/draft-leafy-greens.html"
 
 author:
- -
-    fullname: "Bob Beck"
+-
+    ins: "B Beck"
+    name: "Bob Beck"
     organization: OpenSSL
     email: "beck@obtuse.com"
 -
-    fullname: "Mike Ounsworth"
+    ins: "M. Ounsworth"
+    name: "Mike Ounsworth"
     organization: Cryptic Forest Software
-    email: mike@ounsworth.ca
+    email: "mike@ounsworth.ca"
 
 normative:
   RFC5280:
