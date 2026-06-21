@@ -1,6 +1,8 @@
 <!-- regenerate: on (set to off if you edit this file) -->
 
-## End Entity Name Restirictions
+## Leafy Greens (End Entity Name Restirictions)
+
+Greenlighting names in leaves.
 
 (yes it should be renamed, please bikeshed)
 
