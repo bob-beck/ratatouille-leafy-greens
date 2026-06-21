@@ -73,7 +73,7 @@ sections 6.1.3 and 6.1.4.
 For `dNSName` `SubjectAlternativeName` entries, {{RFC5280}}'s matching algorithm is purely
 lexical: *"Any DNS name that can be constructed by simply adding
 zero or more labels to the left-hand side of the name satisfies
-the name constraint."* is read literally, this treats `*` as an
+the name constraint."* Read literally, this treats `*` as an
 ordinary label and makes `*.example.com` satisfy a constraint of
 `example.com` exactly as `host.example.com` does. {{RFC5280}}
 section 4.2.1.6 separately leaves the semantics of wildcards in
@@ -85,7 +85,7 @@ section 1.2 explicitly defers name constraints back to {{RFC5280}},
 creating a situation where neither specification defines its
 semantics.
 
-Name constraints can be used as either inclusionary or inclusionary.
+Name constraints can be used as either inclusionary or exclusionary.
 For example, consider a CA certificate with an excluded constraint
 of `foo.example.com`, signing an end entity certificate with a SAN
 of `*.example.com`. The apparent intent of the constraint is to
@@ -231,7 +231,7 @@ in that path MUST satisfy each of the following restrictions:
  * The subject alternative name extension MUST be present and MUST
    contain at least one `dNSName` entry. The number of `dNSName`
    entries SHOULD NOT exceed 16; conforming applications MAY reject
-   certificates with more as a DOS prevention.
+   certificates with more to prevent denial-of-service.
 
  * Each `dNSName` entry in the subject alternative name extension
    MUST conform to {{RFC9525}} section 6.3.
