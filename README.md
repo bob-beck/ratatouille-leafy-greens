@@ -11,7 +11,7 @@ Greenlighting names in leaves.
 * [Individual Draft](https://datatracker.ietf.org/doc/html/draft-leafy-greens)
 * [Compare Editor's Copy to Individual Draft](https://bob-beck.github.io/ratatouille-leafy-greens/#go.draft-leafy-greens.diff)
 
-TL;DR - 5280 defines name constrains as a critical extension, which, for wildcards in DNS names, can change meaning over time.
+TL;DR - 5280 defines name constraints as a critical extension, which, for wildcards in SAN DNS names, can change meaning over time.
 
 The result of this is that you can not trust that two applications recognizing the critical extension recognize it with
 the same semantics.
