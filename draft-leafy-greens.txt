@@ -2,7 +2,7 @@
 
 
 
-Network Working Group                                            B. Beck
+TLS?                                                             B. Beck
 Internet-Draft                                                   OpenSSL
 Intended status: Informational                              M. Ounsworth
 Expires: 23 December 2026                        Cryptic Forest Software
@@ -35,6 +35,10 @@ About This Document
    beck.github.io/ratatouille-leafy-greens/draft-leafy-greens.html.
    Status information for this document may be found at
    https://datatracker.ietf.org/doc/draft-leafy-greens/.
+
+   Discussion of this document takes place on the TBD?  Working Group
+   mailing list (mailto:beck@openssl.org), which is archived at
+   https://example.com/WG.
 
    Source for this draft and an issue tracker can be found at
    https://github.com/bob-beck/ratatouille-leafy-greens.
