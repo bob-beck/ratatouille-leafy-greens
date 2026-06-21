@@ -9,7 +9,7 @@ Expires: 23 December 2026                        Cryptic Forest Software
                                                             21 June 2026
 
 
-                      End Entity Name Restrictions
+              Leafy Greens - End Entity Name Restrictions
                        draft-leafy-greens-latest
 
 Abstract
