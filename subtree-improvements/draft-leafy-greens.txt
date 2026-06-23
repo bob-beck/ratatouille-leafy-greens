@@ -1,0 +1,430 @@
+
+
+
+
+TLS?                                                             B. Beck
+Internet-Draft                                                   OpenSSL
+Intended status: Standards Track                            M. Ounsworth
+Expires: 25 December 2026                        Cryptic Forest Software
+                                                            23 June 2026
+
+
+              Leafy Greens - End Entity Name Restrictions
+                       draft-leafy-greens-latest
+
+Abstract
+
+   The interaction of name constraint matching in [RFC5280] and wildcard
+   subject alternative names creates a gap in which an excluded name
+   constraint cannot be relied upon to prevent the issuance of
+   certificates usable for the excluded name.  This document defines End
+   Entity Name Restrictions (EENR), a new critical X.509 extension for
+   CA certificates that constrains the dNSName Subject Alternative Name
+   entries which may appear in end entity certificates issued beneath
+   the CA.  EENR specifies its own matching semantics, including for
+   wildcard dNSName entries, so that it does not depend on application-
+   defined interpretations.  The extension is scoped to use in
+   certificate path validation for TLS client and TLS server
+   authentication.
+
+About This Document
+
+   This note is to be removed before publishing as an RFC.
+
+   The latest revision of this draft can be found at https://bob-
+   beck.github.io/ratatouille-leafy-greens/draft-leafy-greens.html.
+   Status information for this document may be found at
+   https://datatracker.ietf.org/doc/draft-leafy-greens/.
+
+   Discussion of this document takes place on the TBD?  Working Group
+   mailing list (mailto:beck@openssl.org), which is archived at
+   https://example.com/WG.
+
+   Source for this draft and an issue tracker can be found at
+   https://github.com/bob-beck/ratatouille-leafy-greens.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on 25 December 2026.
+
+Copyright Notice
+
+   Copyright (c) 2026 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents (https://trustee.ietf.org/
+   license-info) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.  Code Components
+   extracted from this document must include Revised BSD License text as
+   described in Section 4.e of the Trust Legal Provisions and are
+   provided without warranty as described in the Revised BSD License.
+
+Table of Contents
+
+   1.  Introduction
+   2.  Conventions and Definitions
+   3.  The End Entity Name Restrictions Extension
+     3.1.  Syntax
+     3.2.  Use in CA Certificates
+     3.3.  Propagation Through CA Certificates
+     3.4.  Relationship to RFC 5280 Name Constraints
+     3.5.  Restrictions on End Entity Certificates
+     3.6.  Matching Semantics
+   4.  Security Considerations
+   5.  IANA Considerations
+   6.  Normative References
+   Appendix A.  Alternatives Considered
+     A.1.  Amending RFC 5280 or RFC 9525 to define wildcard semantics
+     A.2.  Prohibiting wildcards in chains with excluded dNSName
+           constraints
+     A.3.  Just don't fix it
+   Acknowledgments
+   Authors' Addresses
+
+1.  Introduction
+
+   X.509 name constraints, defined in [RFC5280] section 4.2.1.10, allow
+   a CA certificate to restrict the names that may appear in any
+   certificate beneath it in a certification path.  Enforcement is
+   performed during certification-path validation, per [RFC5280]
+   sections 6.1.3 and 6.1.4.
+
+   For dNSName SubjectAlternativeName entries, [RFC5280]'s matching
+   algorithm is purely lexical: _"Any DNS name that can be constructed
+   by simply adding zero or more labels to the left-hand side of the
+   name satisfies the name constraint."_ Read literally, this treats *
+   as an ordinary label and makes *.example.com satisfy a constraint of
+   example.com exactly as host.example.com does.  [RFC5280] section
+   4.2.1.6 separately leaves the semantics of wildcards in subject
+   alternative names undefined, requiring any application that uses them
+   to define the semantics itself.  [RFC9525] supplies wildcard
+   semantics for one application context, matching presented identifiers
+   against reference identifiers in TLS, but its section 1.2 explicitly
+   defers name constraints back to [RFC5280], creating a situation where
+   neither specification defines its semantics.
+
+   Name constraints can be used as either inclusionary or exclusionary.
+   For example, consider a CA certificate with an excluded constraint of
+   foo.example.com, signing an end entity certificate with a SAN of
+   *.example.com.  The apparent intent of the constraint is to prevent
+   that CA from issuing certificates usable as foo.example.com.  The SAN
+   does not fall within the excluded subtree under [RFC5280]'s matching,
+   and the certificate passes name-constraint validation.  The resulting
+   end entity certificate can then be presented to TLS clients as the
+   server identity for foo.example.com: [RFC9525] section 6.3 defines
+   *.example.com as a valid presented identifier matching the reference
+   identifier foo.example.com.  The constraint does what [RFC5280]
+   prescribes: it rejects a literal SAN of foo.example.com.  It does
+   not, however, prevent the CA from issuing certificates that can be
+   used as foo.example.com.
+
+   A future specification that defines wildcard semantics for name
+   constraint matching cannot remedy this for the general case.
+   Implementations conforming to [RFC5280] as written today would remain
+   conformant when applying the literal algorithm indefinitely, and any
+   verifier predating such a clarification would continue to do so.
+   Unless the CA can constrain its certificates to verifiers known to
+   apply specific semantics, it cannot ensure that the verifiers
+   eventually consuming them share any single interpretation.
+   Criticality does not remedy this: [RFC5280] deferred the wildcard
+   portion of nameConstraints semantics, so the meaning of this critical
+   extension can change without changing [RFC5280], and a verifier
+   processing it conformantly may be applying semantics no longer
+   current.
+
+   A PKI that depends on excludedSubtrees for security therefore cannot
+   rely on those exclusions being enforced consistently across the
+   verifiers that will see its certificates.  This document defines End
+   Entity Name Restrictions (EENR), a new critical extension for CA
+   certificates that constrains the dNSName Subject Alternative Names
+   which may appear in end entity certificates issued beneath the CA.
+   EENR is scoped exclusively to TLS client and TLS server
+   authentication; this document does not address the analogous
+   ambiguity for other application protocols that use X.509 certificates
+   with dNSName SANs.  Confining the extension to TLS allows its
+   matching semantics to be specified completely within this document.
+
+2.  Conventions and Definitions
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in
+   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
+
+3.  The End Entity Name Restrictions Extension
+
+3.1.  Syntax
+
+   The End Entity Name Restrictions extension is identified by the
+   following object identifier:
+
+   id-pe-eenr OBJECT IDENTIFIER ::= { TBD }
+
+   The extension SHALL be encoded as follows:
+
+   EndEntityNameRestrictions ::= SEQUENCE { permittedSubtrees [0]
+   GeneralSubtrees OPTIONAL, excludedSubtrees [1] GeneralSubtrees
+   OPTIONAL }
+
+   The GeneralSubtrees, GeneralSubtree, and BaseDistance types are
+   defined in [RFC5280] section 4.2.1.10 and are reused here without
+   modification.
+
+   The base field of each GeneralSubtree MUST be of type dNSName; the
+   use of any other general-name type renders the extension malformed.
+   The minimum field of each GeneralSubtree MUST be 0 and the maximum
+   field MUST be absent, matching the constraint that [RFC5280] places
+   on use of GeneralSubtree in the nameConstraints extension.
+
+   The IANA registration request for id-pe-eenr appears in Section 5.
+
+3.2.  Use in CA Certificates
+
+   The End Entity Name Restrictions extension MUST be used only in a CA
+   certificate; it is an error to include it in a certificate with
+   basicConstraints.cA=FALSE.  Conforming CAs MUST mark the extension as
+   critical.
+
+   Both permittedSubtrees and excludedSubtrees are OPTIONAL.  If both
+   are absent, the extension is present but conveys no name-space
+   restriction; the restrictions on end entity certificates defined in
+   Section 3.5 still apply by virtue of the extension's presence
+   anywhere in the certification path.  If permittedSubtrees is
+   provided, it MUST contain at least one entry; if excludedSubtrees is
+   provided, it MUST contain at least one entry.
+
+   The dNSName value carried in the base field of each GeneralSubtree
+   MUST NOT contain the DNS wildcard character *.
+
+3.3.  Propagation Through CA Certificates
+
+   This extension is designed so that delegation can only narrow, never
+   widen, the names a CA may authorize in subsequent end entity
+   certificates.  The propagation rules below realize that property by
+   requiring every CA certificate beneath an EENR-bearing CA to carry
+   the cumulative restriction set in its own extension.  A verifier
+   therefore needs to consult only the immediate issuer of an end entity
+   certificate when applying Section 3.6; no walking of the
+   certification path is required.
+
+   If a CA certificate contains the End Entity Name Restrictions
+   extension, every CA certificate that it issues, directly or
+   transitively, MUST also contain the extension.
+
+   Where the issuer's extension contains permittedSubtrees, the issued
+   CA certificate's extension MUST also contain permittedSubtrees, and
+   every entry in the issued CA's permittedSubtrees MUST be contained,
+   in the sense of [RFC5280] section 4.2.1.10, in some entry of the
+   issuer's permittedSubtrees.
+
+   Where the issuer's extension contains excludedSubtrees, the issued CA
+   certificate's extension MUST also contain excludedSubtrees, and every
+   entry in the issuer's excludedSubtrees MUST be contained, in the
+   sense of [RFC5280] section 4.2.1.10, in some entry of the issued CA's
+   excludedSubtrees.
+
+   A verifier MUST reject any certification path whose CA certificates
+   do not satisfy these propagation rules.
+
+3.4.  Relationship to RFC 5280 Name Constraints
+
+   The matching semantics defined by this document for dNSName entries
+   differ from those of [RFC5280] section 4.2.1.10, and a certification
+   path that combines both would be subject to the matching ambiguity
+   this extension is designed to eliminate.  To avoid that, in any
+   certification path containing the End Entity Name Restrictions
+   extension, a CA certificate in that path MUST NOT include a
+   nameConstraints extension whose permittedSubtrees or excludedSubtrees
+   contains a dNSName form.  A verifier MUST reject any certification
+   path that violates this restriction.
+
+3.5.  Restrictions on End Entity Certificates
+
+   When the End Entity Name Restrictions extension is present in any CA
+   certificate in a certification path, every end entity certificate in
+   that path MUST satisfy each of the following restrictions:
+
+   *  The subject distinguished name MUST NOT contain a commonName (CN)
+      attribute.
+
+   *  The extended key usage extension MUST be present and MUST contain
+      exactly one of the following key purpose identifiers, and no
+      other:
+
+      -  id-kp-serverAuth (1.3.6.1.5.5.7.3.1) for TLS server
+         authentication, or
+
+      -  id-kp-clientAuth (1.3.6.1.5.5.7.3.2) for TLS client
+         authentication.
+
+   *  The subject alternative name extension MUST be present and MUST
+      contain at least one dNSName entry.  The number of dNSName entries
+      SHOULD NOT exceed 16; conforming applications MAY reject
+      certificates with more to prevent denial-of-service.
+
+   *  Each dNSName entry in the subject alternative name extension MUST
+      conform to [RFC9525] section 6.3.
+
+   A verifier MUST reject any certification path containing an end
+   entity certificate that fails any of these restrictions.
+
+3.6.  Matching Semantics
+
+   The End Entity Name Restrictions extension that applies to a given
+   end entity certificate is the one carried by its immediate issuer.
+   Because of the propagation rules in Section 3.3, that extension
+   expresses the complete cumulative set of restrictions from the entire
+   path above; no walking of the certification path is required.
+
+   For each dNSName entry present in the end entity certificate's
+   subject alternative name extension, the verifier MUST evaluate the
+   restrictions in the immediate issuer's extension as follows:
+
+   *  If permittedSubtrees is present, the dNSName entry MUST match at
+      least one of those permitted subtree base values.
+
+   *  For every entry in excludedSubtrees, the dNSName entry MUST NOT
+      match that excluded subtree base value.
+
+   An excluded subtree base value (which contains no wildcard) is
+   treated as the reference identifier, and the end entity certificate's
+   dNSName entry (which is allowed to contain a wildcard in its leftmost
+   label) as the presented identifier, with the wildcard semantics as
+   per [RFC9525] section 6.3.
+
+   A permitted subtree base value (which contains no wildcard) is
+   treated as the reference identifier, and the end entity certificate's
+   dNSName entry (which is allowed to contain a wildcard in its leftmost
+   label) as the presented identifier, as per [RFC9525] section 6.3,
+   excluding the wildcard semantics, meaning the wildcard label has no
+   special meaning other than as a literal label.
+
+   A verifier MUST reject any certification path for which a dNSName
+   entry fails this evaluation.
+
+4.  Security Considerations
+
+   The End Entity Name Restrictions extension is a critical X.509
+   extension.  A verifier processing a certification path containing the
+   extension either implements the matching semantics defined here
+   exactly or rejects the path; no third option exists in which the
+   extension is silently misinterpreted.  This is what allows a CA to
+   rely on it as a security control restricting the dNSName Subject
+   Alternative Names in end entity certificates issued beneath it, for
+   purposes of TLS client and TLS server authentication.
+
+5.  IANA Considerations
+
+   This document defines one new object identifier for the End Entity
+   Name Restrictions extension.  IANA is requested to assign a value
+   from the "SMI Security for PKIX Certificate Extension" registry
+   (1.3.6.1.5.5.7.1) for the OID label id-pe-eenr.  The assigned value
+   is to be substituted for the placeholder in Section 3.1.
+
+                 +=========+=============+===============+
+                 | Decimal | Description | References    |
+                 +=========+=============+===============+
+                 |     TBD | id-pe-eenr  | this document |
+                 +---------+-------------+---------------+
+
+                                  Table 1
+
+   The reference in the table is to be replaced with the published RFC
+   number upon publication.
+
+6.  Normative References
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/rfc/rfc2119>.
+
+   [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
+              Housley, R., and W. Polk, "Internet X.509 Public Key
+              Infrastructure Certificate and Certificate Revocation List
+              (CRL) Profile", RFC 5280, DOI 10.17487/RFC5280, May 2008,
+              <https://www.rfc-editor.org/rfc/rfc5280>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
+
+   [RFC9525]  Saint-Andre, P. and R. Salz, "Service Identity in TLS",
+              RFC 9525, DOI 10.17487/RFC9525, November 2023,
+              <https://www.rfc-editor.org/rfc/rfc9525>.
+
+Appendix A.  Alternatives Considered
+
+A.1.  Amending RFC 5280 or RFC 9525 to define wildcard semantics
+
+   The wildcard ambiguity could in principle be addressed by an update
+   to [RFC5280] section 4.2.1.10's matching algorithm, or by an update
+   to [RFC9525] to extend its wildcard semantics to name constraint
+   matching (which [RFC9525] section 1.2 currently defers to [RFC5280]).
+
+   Either approach fails to give a CA reliable control over how its
+   certificates will be evaluated.  A verifier conforming to the
+   specification as written today is not made non-conformant by any
+   future update; a CA issuing a certificate cannot ensure that the
+   verifiers consuming it have adopted the updated semantics, and would
+   have no way to detect a verifier still applying the original
+   algorithm.
+
+A.2.  Prohibiting wildcards in chains with excluded dNSName constraints
+
+   The security failure caused by the matching ambiguity arises only
+   when both wildcard dNSName SAN entries and dNSName excludedSubtrees
+   are present in the same certification path: literal [RFC5280]
+   matching can accept a wildcard SAN whose TLS expansion covers a name
+   the excluded subtree was intended to prevent.  An [RFC5280] amendment
+   could prohibit this combination.
+
+   Such an amendment suffers the same deployment problem as defining new
+   semantics: a verifier that has not adopted it will not enforce the
+   prohibition.  Certificates issued under the old understanding remain
+   vulnerable in proportion to the verifier population that has not been
+   updated.
+
+A.3.  Just don't fix it
+
+   Acknowledge the possibility that with the default [RFC5280] matching
+   semantics, wildcards will not match names in an excluded subtree name
+   constraint that could in turn match the wildcard and be accepted for
+   a TLS connection.  Document that excluded name constraints should not
+   be relied on to limit what a CA can sign for in any PKI where
+   wildcards are not excluded from use by some other means.
+
+   The limitation of this is that certificates used for TLS in the
+   presence of wildcards may only be constrained reliably by using only
+   permitted subtree entries.
+
+Acknowledgments
+
+   TODO acknowledge.
+
+Authors' Addresses
+
+   Bob Beck
+   OpenSSL
+   Email: beck@obtuse.com
+
+
+   Mike Ounsworth
+   Cryptic Forest Software
+   Email: mike@ounsworth.ca
