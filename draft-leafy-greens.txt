@@ -5,8 +5,8 @@
 TLS?                                                             B. Beck
 Internet-Draft                                                   OpenSSL
 Intended status: Standards Track                            M. Ounsworth
-Expires: 23 December 2026                        Cryptic Forest Software
-                                                            21 June 2026
+Expires: 25 December 2026                        Cryptic Forest Software
+                                                            23 June 2026
 
 
               Leafy Greens - End Entity Name Restrictions
@@ -58,7 +58,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 23 December 2026.
+   This Internet-Draft will expire on 25 December 2026.
 
 Copyright Notice
 
@@ -87,7 +87,9 @@ Table of Contents
      3.6.  Matching Semantics
    4.  Security Considerations
    5.  IANA Considerations
-   6.  Normative References
+   6.  References
+     6.1.  Normative References
+     6.2.  Informative References
    Appendix A.  Alternatives Considered
      A.1.  Amending RFC 5280 or RFC 9525 to define wildcard semantics
      A.2.  Prohibiting wildcards in chains with excluded dNSName
@@ -330,7 +332,9 @@ Table of Contents
    The reference in the table is to be replaced with the published RFC
    number upon publication.
 
-6.  Normative References
+6.  References
+
+6.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -350,6 +354,12 @@ Table of Contents
    [RFC9525]  Saint-Andre, P. and R. Salz, "Service Identity in TLS",
               RFC 9525, DOI 10.17487/RFC9525, November 2023,
               <https://www.rfc-editor.org/rfc/rfc9525>.
+
+6.2.  Informative References
+
+   [OPENSSL-NC]
+              OpenSSL, "OpenSSL Name Constraints documentation", 10 June
+              2026, <https://github.com/openssl/openssl/pull/31334>.
 
 Appendix A.  Alternatives Considered
 
@@ -390,7 +400,8 @@ A.3.  Just don't fix it
    constraint that could in turn match the wildcard and be accepted for
    a TLS connection.  Document that excluded name constraints should not
    be relied on to limit what a CA can sign for in any PKI where
-   wildcards are not excluded from use by some other means.
+   wildcards are not excluded from use by some other means.  This is
+   currently the approach being taken in [OPENSSL-NC].
 
    The limitation of this is that certificates used for TLS in the
    presence of wildcards may only be constrained reliably by using only
