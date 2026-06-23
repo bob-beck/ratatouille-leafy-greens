@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-06-21T01:00:46.923252+00:00",
+  "timestamp": "2026-06-23T04:08:29.226291+00:00",
   "repo": "bob-beck/ratatouille-leafy-greens",
   "labels": [
     {
@@ -60,9 +60,9 @@
       "authorAssociation": "OWNER",
       "assignees": [],
       "labels": [],
-      "body": "I sort of landed on \"treat the wildcard as if wildcards weren't allowed\" and refer to 9525 as I have been for permitted,\n\nas opposed to spelling it all out and just saying \"remove the wildcard label when matching permitted\" \n\nI think this is the equivalent with less repetition from 9525 the way I have it, but I may be wrong.  \n\nvery happy for thoughts on better wording.",
+      "body": "Section 3.6 phrases permitted subtree matching as 'use RFC 9525 \u00a76.3 excluding wildcard semantics.' \n\nThis is concise but potentially harder to parse than 'treat the wildcard label as a literal label' or 'strip the wildcard label before matching.'\n\nI think this is the equivalent with less repetition from 9525 the way I have it, but I may be wrong.  \n\nvery happy for thoughts on better wording.",
       "createdAt": "2026-06-19T20:35:54Z",
-      "updatedAt": "2026-06-19T20:35:54Z",
+      "updatedAt": "2026-06-21T21:22:47Z",
       "closedAt": null,
       "comments": []
     },
@@ -81,7 +81,189 @@
       "updatedAt": "2026-06-19T20:41:20Z",
       "closedAt": null,
       "comments": []
+    },
+    {
+      "number": 4,
+      "id": "I_kwDOSVR4Ic8AAAABGNojFw",
+      "title": "16",
+      "url": "https://github.com/bob-beck/ratatouille-leafy-greens/issues/4",
+      "state": "OPEN",
+      "author": "bob-beck",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Yes, it's a number pulled from thin air\n\nPossibly based on experience and what I've seen in the world but nevertheless a bum number.\n\nHappy to entertain different values here within reason, but believe that given this is only a restriction\nwhen used in combination with an extension that the CA would be making a choice to use, we want to\nlimit what can be here to something that makes this not a denial of service vector.\n",
+      "createdAt": "2026-06-21T20:48:01Z",
+      "updatedAt": "2026-06-21T20:48:01Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
-  "pulls": []
+  "pulls": [
+    {
+      "number": 3,
+      "id": "PR_kwDOSVR4Ic7o4ZAx",
+      "title": "MikeO first pass",
+      "url": "https://github.com/bob-beck/ratatouille-leafy-greens/pull/3",
+      "state": "MERGED",
+      "author": "ounsworth",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-06-21T15:18:42Z",
+      "updatedAt": "2026-06-21T15:45:25Z",
+      "baseRepository": "bob-beck/ratatouille-leafy-greens",
+      "baseRefName": "main",
+      "baseRefOid": "7de8a7ae146f63e06e5658edcb0a407be1f638d6",
+      "headRepository": "bob-beck/ratatouille-leafy-greens",
+      "headRefName": "mikeo_first_pass",
+      "headRefOid": "23d409fee991f7e1b33673618a75f3c9a06c8de3",
+      "closedAt": "2026-06-21T15:40:24Z",
+      "mergedAt": "2026-06-21T15:40:24Z",
+      "mergedBy": "bob-beck",
+      "mergeCommit": {
+        "oid": "e992bdcd803a5e8e3528bc0366cb8196db118ab9"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOSVR4Ic8AAAABDpmkEA",
+          "commit": {
+            "abbreviatedOid": "23d409f"
+          },
+          "author": "bob-beck",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "For all my efforts avoiding casual musts in IETF documents I can never cure myself of casual may. ",
+          "createdAt": "2026-06-21T15:40:02Z",
+          "updatedAt": "2026-06-21T15:40:02Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "id": "PR_kwDOSVR4Ic7pYuxk",
+      "title": "Improve restrictions on expanding constraints",
+      "url": "https://github.com/bob-beck/ratatouille-leafy-greens/pull/5",
+      "state": "OPEN",
+      "author": "bob-beck",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "After a discussion with David Benjamin, I was reminded of the better way to do this.\r\n\r\nIn this manner a chain builder can enforce each step, but the leaf need only be checked against it's signer.",
+      "createdAt": "2026-06-22T21:55:29Z",
+      "updatedAt": "2026-06-23T02:50:16Z",
+      "baseRepository": "bob-beck/ratatouille-leafy-greens",
+      "baseRefName": "main",
+      "baseRefOid": "ee809f4af1b2d19ef2d2a6366217b0c68c790d31",
+      "headRepository": "bob-beck/ratatouille-leafy-greens",
+      "headRefName": "subtree-improvements",
+      "headRefOid": "c82edb01f8fe38ad5526b4b4258f221adcc2afcb",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "COLLABORATOR",
+          "body": "So, this is doing a philosophically weird thing in that now I'm not sure where the enforcement point is to catch sub CAs that are misbehaving by containing an invalid EENR extn.\r\n\r\nThe kicker is that these two sentences in the new diff seem contradictory:\r\n\r\n> 193 no walking of the certification path is\r\n> 194 required.\r\n\r\n\r\n> 213 A verifier MUST reject any certification path whose CA certificates\r\n> 214 do not satisfy these propagation rules.\r\n\r\nHow is the verifier supposed to reject a CA that does not satisfy these propagation rules if it is not required to walk the certification path?\r\nYou can't have you cake an eat it too.\r\n\r\nIf you're trying to do what you're trying to do, then you should suggest a GREASE-like random check or a check-on-first-use model.\r\n\r\nGREASE-like would be:\r\n\r\n> In order to catch mis-issued CAs that do not satisfy these propagation rules, verifiers SHOULD sporadically walk a certification path to ensure compliance; for example full path validation could be performed randomly with a low probability.\r\n\r\nCheck-on-first-use would be something like:\r\n\r\n> A client SHOULD perform a full path validation check for conformance with these propagation rules the first time it sees a particular intermediate CA certificate and MAY then cache that intermediate certificate in such a way that future encounters do not require re-checking. Alternatively, verifiers MAY skip the path propagation check entirely if it has assurance that the intermediate CAs are being externally audited.\r\n\r\n",
+          "createdAt": "2026-06-23T02:32:00Z",
+          "updatedAt": "2026-06-23T02:32:00Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I find this wording hard to follow, particularly because I have to pause reading this sentence, go read 5280::4.2.1.10 (which is 3 pages!!), then come back and finish reading this sentence.\r\n\r\n> `permittedSubtrees`, and every entry in the issued CA's\r\n`permittedSubtrees` MUST be contained, in the sense of {{RFC5280}}\r\nsection 4.2.1.10, in some entry of the issuer's `permittedSubtrees`.\r\n\r\nReferencing 5280::4.2.1.10 is fine, but can you please inline the salient bit so that this paragraph is self-contained. Maybe:\r\n\r\n> ... the 'permittedSubtrees' list MUST be equal to or a subset of the 'permittedSubtrees' list in its issuer's certificate. That means every entry in the issued CA's\r\n`permittedSubtrees` MUST be contained, in the sense of {{RFC5280}}\r\nsection 4.2.1.10, in some entry of the issuer's `permittedSubtrees`. Entries that appear in the issuer's certificate MAY be dropped from the list in the issued certificate in order to restrict the list.",
+          "createdAt": "2026-06-23T02:50:16Z",
+          "updatedAt": "2026-06-23T02:50:16Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 6,
+      "id": "PR_kwDOSVR4Ic7pZKFV",
+      "title": "Add the alternative of putting these defintions in 5280",
+      "url": "https://github.com/bob-beck/ratatouille-leafy-greens/pull/6",
+      "state": "OPEN",
+      "author": "bob-beck",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Using a critical extension as a marker that they are supported, and solving the wildcard problem that way.\r\n\r\nOnly gets to solve the name constraint problem, not tag on other improvements to the name constraint processing. \r\n\r\n(and requires us to rev 5280)\r\n\r\nSuggested by a chat with David Benjamin",
+      "createdAt": "2026-06-22T22:15:13Z",
+      "updatedAt": "2026-06-23T02:41:08Z",
+      "baseRepository": "bob-beck/ratatouille-leafy-greens",
+      "baseRefName": "main",
+      "baseRefOid": "ee809f4af1b2d19ef2d2a6366217b0c68c790d31",
+      "headRepository": "bob-beck/ratatouille-leafy-greens",
+      "headRefName": "critical-marker",
+      "headRefOid": "735f3364f80df827a52cf296b7d8324c7a4d0494",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Let me get this straight -- you're saying to trash the thing defined in this document, and add a critical flag extension whose presence changes the processing rules of 5280's NameConstraints extn. That's certainly \"Updates 5280\", not \"Amends 5280\".\r\n\r\nI could see an approach like that -- maybe -- if the flag ext was non-critical so that the same cert was simultaneously valid to old clients under the old rules and to new clients under the new rules, but without the backwards-compat goal, that just seems messy for no gain?\r\n\r\nI assume you would eventually pick one or the other and not leave both in the document?",
+          "createdAt": "2026-06-23T02:39:40Z",
+          "updatedAt": "2026-06-23T02:41:08Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 7,
+      "id": "PR_kwDOSVR4Ic7paRA9",
+      "title": "Add a reference to OpenSSL's warnings about excluded name constraints",
+      "url": "https://github.com/bob-beck/ratatouille-leafy-greens/pull/7",
+      "state": "OPEN",
+      "author": "bob-beck",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Will change to the man page ref when they get around to landing it. ",
+      "createdAt": "2026-06-22T23:18:19Z",
+      "updatedAt": "2026-06-23T02:51:40Z",
+      "baseRepository": "bob-beck/ratatouille-leafy-greens",
+      "baseRefName": "main",
+      "baseRefOid": "ee809f4af1b2d19ef2d2a6366217b0c68c790d31",
+      "headRepository": "bob-beck/ratatouille-leafy-greens",
+      "headRefName": "openssl-ref",
+      "headRefOid": "a478d7c2c627be40ded1ecd21fc57ae77b12b28d",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "ounsworth",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Fine.\r\n\r\nThough idnits will complain about an unused reference; so you should jam a reference to that somewhere in the Intro.",
+          "createdAt": "2026-06-23T02:51:01Z",
+          "updatedAt": "2026-06-23T02:51:40Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOSVR4Ic8AAAABDy3OqA",
+          "commit": {
+            "abbreviatedOid": "a478d7c"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-06-23T02:50:52Z",
+          "updatedAt": "2026-06-23T02:50:52Z",
+          "comments": []
+        }
+      ]
+    }
+  ]
 }
