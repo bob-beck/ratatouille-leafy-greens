@@ -40,6 +40,13 @@ normative:
   RFC9525:
 
 informative:
+  OPENSSL-NC:
+    title: OpenSSL Name Constraints documentation
+    target: https://github.com/openssl/openssl/pull/31334
+    date: 2026-06-10
+    author:
+      - org: OpenSSL
+
 
 ...
 
@@ -339,7 +346,8 @@ semantics, wildcards will not match names in an excluded subtree name
 constraint that could in turn match the wildcard and be accepted for a
 TLS connection.  Document that excluded name constraints should not be
 relied on to limit what a CA can sign for in any PKI where wildcards
-are not excluded from use by some other means.
+are not excluded from use by some other means. This is currently the
+approach being taken in {{OPENSSL-NC}}.
 
 The limitation of this is that certificates used for TLS in the
 presence of wildcards may only be constrained reliably by using only
