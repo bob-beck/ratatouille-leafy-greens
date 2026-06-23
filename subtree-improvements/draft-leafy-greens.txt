@@ -216,28 +216,27 @@ Table of Contents
 
    This extension is designed so that delegation can only narrow, never
    widen, the names a CA may authorize in subsequent end entity
-   certificates.  The propagation rules below realize that property by
-   requiring every CA certificate beneath an EENR-bearing CA to carry
-   the cumulative restriction set in its own extension.  A verifier
-   therefore needs to consult only the immediate issuer of an end entity
-   certificate when applying Section 3.6; no walking of the
-   certification path is required.
+   certificates.  The propagation rules below require every CA
+   certificate beneath an EENR-bearing CA to carry the cumulative
+   restriction set in its own extension.
 
    If a CA certificate contains the End Entity Name Restrictions
    extension, every CA certificate that it issues, directly or
    transitively, MUST also contain the extension.
 
    Where the issuer's extension contains permittedSubtrees, the issued
-   CA certificate's extension MUST also contain permittedSubtrees, and
-   every entry in the issued CA's permittedSubtrees MUST be contained,
-   in the sense of [RFC5280] section 4.2.1.10, in some entry of the
-   issuer's permittedSubtrees.
+   CA's extension MUST also contain permittedSubtrees.  The issued CA's
+   list MUST be equal to or a subset of the issuer's list; that is,
+   every entry MUST be contained, per [RFC5280] section 4.2.1.10, in
+   some entry of the issuer's list.  Entries MAY be omitted to narrow
+   the permitted name space.
 
-   Where the issuer's extension contains excludedSubtrees, the issued CA
-   certificate's extension MUST also contain excludedSubtrees, and every
-   entry in the issuer's excludedSubtrees MUST be contained, in the
-   sense of [RFC5280] section 4.2.1.10, in some entry of the issued CA's
-   excludedSubtrees.
+   Where the issuer's extension contains excludedSubtrees, the issued
+   CA's extension MUST also contain excludedSubtrees.  The issued CA's
+   list MUST be equal to or a superset of the issuer's list; that is,
+   every entry of the issuer's list MUST be contained, per [RFC5280]
+   section 4.2.1.10, in some entry of the issued CA's list.  Additional
+   entries MAY be added to broaden the excluded name space.
 
    A verifier MUST reject any certification path whose CA certificates
    do not satisfy these propagation rules.

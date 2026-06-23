@@ -1368,27 +1368,25 @@ contain at least one entry; if <code>excludedSubtrees</code> is provided, it
         </h3>
 <p id="section-3.3-1">This extension is designed so that delegation can only narrow,
 never widen, the names a CA may authorize in subsequent end
-entity certificates. The propagation rules below realize that
-property by requiring every CA certificate beneath an EENR-bearing
-CA to carry the cumulative restriction set in its own extension.
-A verifier therefore needs to consult only the immediate issuer
-of an end entity certificate when applying
-<a href="#matching-semantics" class="auto internal xref">Section 3.6</a>; no walking of the certification path is
-required.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
+entity certificates. The propagation rules below require every CA
+certificate beneath an EENR-bearing CA to carry the cumulative
+restriction set in its own extension.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
 <p id="section-3.3-2">If a CA certificate contains the End Entity Name Restrictions
 extension, every CA certificate that it issues, directly or
 transitively, <span class="bcp14">MUST</span> also contain the extension.<a href="#section-3.3-2" class="pilcrow">¶</a></p>
 <p id="section-3.3-3">Where the issuer's extension contains <code>permittedSubtrees</code>, the
-issued CA certificate's extension <span class="bcp14">MUST</span> also contain
-<code>permittedSubtrees</code>, and every entry in the issued CA's
-<code>permittedSubtrees</code> <span class="bcp14">MUST</span> be contained, in the sense of <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>
-section 4.2.1.10, in some entry of the issuer's <code>permittedSubtrees</code>.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
+issued CA's extension <span class="bcp14">MUST</span> also contain <code>permittedSubtrees</code>. The
+issued CA's list <span class="bcp14">MUST</span> be equal to or a subset of the issuer's
+list; that is, every entry <span class="bcp14">MUST</span> be contained, per <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>
+section 4.2.1.10, in some entry of the issuer's list. Entries <span class="bcp14">MAY</span>
+be omitted to narrow the permitted name space.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
 <p id="section-3.3-4">Where the issuer's extension contains <code>excludedSubtrees</code>, the
-issued CA certificate's extension <span class="bcp14">MUST</span> also contain
-<code>excludedSubtrees</code>, and every entry in the issuer's
-<code>excludedSubtrees</code> <span class="bcp14">MUST</span> be contained, in the sense of <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>
-section 4.2.1.10, in some entry of the issued CA's
-<code>excludedSubtrees</code>.<a href="#section-3.3-4" class="pilcrow">¶</a></p>
+issued CA's extension <span class="bcp14">MUST</span> also contain <code>excludedSubtrees</code>. The
+issued CA's list <span class="bcp14">MUST</span> be equal to or a superset of the issuer's
+list; that is, every entry of the issuer's list <span class="bcp14">MUST</span> be contained,
+per <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> section 4.2.1.10, in some entry of the issued CA's
+list. Additional entries <span class="bcp14">MAY</span> be added to broaden the excluded
+name space.<a href="#section-3.3-4" class="pilcrow">¶</a></p>
 <p id="section-3.3-5">A verifier <span class="bcp14">MUST</span> reject any certification path whose CA certificates
 do not satisfy these propagation rules.<a href="#section-3.3-5" class="pilcrow">¶</a></p>
 </section>
