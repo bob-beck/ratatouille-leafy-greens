@@ -376,7 +376,8 @@ Table of Contents
 
    [OPENSSL-NC]
               OpenSSL, "OpenSSL Name Constraints documentation", 10 June
-              2026, <https://github.com/openssl/openssl/pull/31334>.
+              2026, <https://docs.openssl.org/master/man3/
+              NAME_CONSTRAINTS_check/#bugs>.
 
 Appendix A.  Alternatives Considered
 
