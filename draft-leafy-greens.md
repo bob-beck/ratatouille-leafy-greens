@@ -42,7 +42,7 @@ normative:
 informative:
   OPENSSL-NC:
     title: OpenSSL Name Constraints documentation
-    target: https://github.com/openssl/openssl/pull/31334
+    target: https://docs.openssl.org/master/man3/NAME_CONSTRAINTS_check/#bugs
     date: 2026-06-10
     author:
       - org: OpenSSL
