@@ -1060,7 +1060,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Beck &amp; Ounsworth</td>
-<td class="center">Expires 25 December 2026</td>
+<td class="center">Expires 26 December 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1073,12 +1073,12 @@ svg {
 <dd class="internet-draft">draft-leafy-greens-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-06-23" class="published">23 June 2026</time>
+<time datetime="2026-06-24" class="published">24 June 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-12-25">25 December 2026</time></dd>
+<dd class="expires"><time datetime="2026-12-26">26 December 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1142,7 +1142,7 @@ TLS client and TLS server authentication.<a href="#section-abstract-1" class="pi
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 25 December 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 26 December 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1375,17 +1375,28 @@ contain at least one entry; if <code>excludedSubtrees</code> is provided, it
 <a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-propagation-through-ca-cert" class="section-name selfRef">Propagation Through CA Certificates</a>
         </h3>
 <p id="section-3.3-1">This extension is designed so that delegation can only narrow,
-never widen, the names a CA may authorize in subsequent end entity
-certificates. The propagation rules below realize that property.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
-<p id="section-3.3-2">The extension <span class="bcp14">MAY</span> appear in any CA certificate. Where it appears,
-<code>permittedSubtrees</code> and <code>excludedSubtrees</code> accumulate down the
-certification path in the manner specified in
-<a href="#matching-semantics" class="auto internal xref">Section 3.6</a>.<a href="#section-3.3-2" class="pilcrow">¶</a></p>
-<p id="section-3.3-3">Only the first CA certificate to bear the extension in a given
-path <span class="bcp14">MAY</span> use <code>permittedSubtrees</code>. In any CA certificate whose
-certification path contains an ancestor bearing the extension,
-the <code>permittedSubtrees</code> field <span class="bcp14">MUST</span> be absent; subsequent CAs <span class="bcp14">MAY</span>
-narrow the name space further by providing <code>excludedSubtrees</code>.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
+never widen, the names a CA may authorize in subsequent end
+entity certificates. The propagation rules below require every CA
+certificate beneath an EENR-bearing CA to carry the cumulative
+restriction set in its own extension.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.3-2">If a CA certificate contains the End Entity Name Restrictions
+extension, every CA certificate that it issues, directly or
+transitively, <span class="bcp14">MUST</span> also contain the extension.<a href="#section-3.3-2" class="pilcrow">¶</a></p>
+<p id="section-3.3-3">Where the issuer's extension contains <code>permittedSubtrees</code>, the
+issued CA's extension <span class="bcp14">MUST</span> also contain <code>permittedSubtrees</code>. The
+issued CA's list <span class="bcp14">MUST</span> be equal to or a subset of the issuer's
+list; that is, every entry <span class="bcp14">MUST</span> be contained, per <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>
+section 4.2.1.10, in some entry of the issuer's list. Entries <span class="bcp14">MAY</span>
+be omitted to narrow the permitted name space.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
+<p id="section-3.3-4">Where the issuer's extension contains <code>excludedSubtrees</code>, the
+issued CA's extension <span class="bcp14">MUST</span> also contain <code>excludedSubtrees</code>. The
+issued CA's list <span class="bcp14">MUST</span> be equal to or a superset of the issuer's
+list; that is, every entry of the issuer's list <span class="bcp14">MUST</span> be contained,
+per <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> section 4.2.1.10, in some entry of the issued CA's
+list. Additional entries <span class="bcp14">MAY</span> be added to broaden the excluded
+name space.<a href="#section-3.3-4" class="pilcrow">¶</a></p>
+<p id="section-3.3-5">A verifier <span class="bcp14">MUST</span> reject any certification path whose CA certificates
+do not satisfy these propagation rules.<a href="#section-3.3-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="relationship-to-rfc-5280-name-constraints">
@@ -1451,34 +1462,37 @@ entity certificate that fails any of these restrictions.<a href="#section-3.5-3"
         <h3 id="name-matching-semantics">
 <a href="#section-3.6" class="section-number selfRef">3.6. </a><a href="#name-matching-semantics" class="section-name selfRef">Matching Semantics</a>
         </h3>
-<p id="section-3.6-1">For each <code>dNSName</code> entry present in the end entity certificate's
+<p id="section-3.6-1">The End Entity Name Restrictions extension that applies to a given
+end entity certificate is the one carried by its immediate issuer.
+Because of the propagation rules in
+<a href="#propagation-through-ca-certificates" class="auto internal xref">Section 3.3</a>, that extension expresses
+the complete cumulative set of restrictions from the entire path
+above; no walking of the certification path is required.<a href="#section-3.6-1" class="pilcrow">¶</a></p>
+<p id="section-3.6-2">For each <code>dNSName</code> entry present in the end entity certificate's
 subject alternative name extension, the verifier <span class="bcp14">MUST</span> evaluate the
-restrictions accumulated from all End Entity Name Restrictions
-extensions in the certification path as follows:<a href="#section-3.6-1" class="pilcrow">¶</a></p>
+restrictions in the immediate issuer's extension as follows:<a href="#section-3.6-2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3.6-2.1">
-            <p id="section-3.6-2.1.1">If any <code>permittedSubtrees</code> was provided, the <code>dNSName</code> entry
-<span class="bcp14">MUST</span> match at least one of those permitted subtree base values.<a href="#section-3.6-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.6-3.1">
+            <p id="section-3.6-3.1.1">If <code>permittedSubtrees</code> is present, the <code>dNSName</code> entry <span class="bcp14">MUST</span>
+match at least one of those permitted subtree base values.<a href="#section-3.6-3.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-3.6-2.2">
-            <p id="section-3.6-2.2.1">For every <code>excludedSubtrees</code> entry provided by any CA in the
-path that bears the extension, the <code>dNSName</code> entry <span class="bcp14">MUST NOT</span>
-match that excluded subtree base value.<a href="#section-3.6-2.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-3.6-3.2">
+            <p id="section-3.6-3.2.1">For every entry in <code>excludedSubtrees</code>, the <code>dNSName</code> entry <span class="bcp14">MUST NOT</span> match that excluded subtree base value.<a href="#section-3.6-3.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-3.6-3">An excluded subtree base value (which contains no wildcard) is treated
+<p id="section-3.6-4">An excluded subtree base value (which contains no wildcard) is treated
 as the reference identifier, and the end entity certificate's
 <code>dNSName</code> entry (which is allowed to contain a wildcard in its leftmost label)
 as the presented identifier, with the wildcard semantics as per
-<span>[<a href="#RFC9525" class="cite xref">RFC9525</a>]</span> section 6.3.<a href="#section-3.6-3" class="pilcrow">¶</a></p>
-<p id="section-3.6-4">A permitted subtree base value (which contains no wildcard) is treated
+<span>[<a href="#RFC9525" class="cite xref">RFC9525</a>]</span> section 6.3.<a href="#section-3.6-4" class="pilcrow">¶</a></p>
+<p id="section-3.6-5">A permitted subtree base value (which contains no wildcard) is treated
 as the reference identifier, and the end entity certificate's
 <code>dNSName</code> entry (which is allowed to contain a wildcard in its leftmost label)
 as the presented identifier, as per <span>[<a href="#RFC9525" class="cite xref">RFC9525</a>]</span> section 6.3, excluding
 the wildcard semantics, meaning the wildcard label has no special meaning
-other than as a literal label.<a href="#section-3.6-4" class="pilcrow">¶</a></p>
-<p id="section-3.6-5">A verifier <span class="bcp14">MUST</span> reject any certification path for which a
-<code>dNSName</code> entry fails this evaluation.<a href="#section-3.6-5" class="pilcrow">¶</a></p>
+other than as a literal label.<a href="#section-3.6-5" class="pilcrow">¶</a></p>
+<p id="section-3.6-6">A verifier <span class="bcp14">MUST</span> reject any certification path for which a
+<code>dNSName</code> entry fails this evaluation.<a href="#section-3.6-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
