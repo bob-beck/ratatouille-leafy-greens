@@ -191,19 +191,32 @@ The `dNSName` value carried in the `base` field of each
 ## Propagation Through CA Certificates
 
 This extension is designed so that delegation can only narrow,
-never widen, the names a CA may authorize in subsequent end entity
-certificates. The propagation rules below realize that property.
+never widen, the names a CA may authorize in subsequent end
+entity certificates. The propagation rules below require every CA
+certificate beneath an EENR-bearing CA to carry the cumulative
+restriction set in its own extension.
 
-The extension MAY appear in any CA certificate. Where it appears,
-`permittedSubtrees` and `excludedSubtrees` accumulate down the
-certification path in the manner specified in
-{{matching-semantics}}.
+If a CA certificate contains the End Entity Name Restrictions
+extension, every CA certificate that it issues, directly or
+transitively, MUST also contain the extension.
 
-Only the first CA certificate to bear the extension in a given
-path MAY use `permittedSubtrees`. In any CA certificate whose
-certification path contains an ancestor bearing the extension,
-the `permittedSubtrees` field MUST be absent; subsequent CAs MAY
-narrow the name space further by providing `excludedSubtrees`.
+Where the issuer's extension contains `permittedSubtrees`, the
+issued CA's extension MUST also contain `permittedSubtrees`. The
+issued CA's list MUST be equal to or a subset of the issuer's
+list; that is, every entry MUST be contained, per {{RFC5280}}
+section 4.2.1.10, in some entry of the issuer's list. Entries MAY
+be omitted to narrow the permitted name space.
+
+Where the issuer's extension contains `excludedSubtrees`, the
+issued CA's extension MUST also contain `excludedSubtrees`. The
+issued CA's list MUST be equal to or a superset of the issuer's
+list; that is, every entry of the issuer's list MUST be contained,
+per {{RFC5280}} section 4.2.1.10, in some entry of the issued CA's
+list. Additional entries MAY be added to broaden the excluded
+name space.
+
+A verifier MUST reject any certification path whose CA certificates
+do not satisfy these propagation rules.
 
 ## Relationship to RFC 5280 Name Constraints
 
@@ -248,17 +261,22 @@ entity certificate that fails any of these restrictions.
 
 ## Matching Semantics
 
+The End Entity Name Restrictions extension that applies to a given
+end entity certificate is the one carried by its immediate issuer.
+Because of the propagation rules in
+{{propagation-through-ca-certificates}}, that extension expresses
+the complete cumulative set of restrictions from the entire path
+above; no walking of the certification path is required.
+
 For each `dNSName` entry present in the end entity certificate's
 subject alternative name extension, the verifier MUST evaluate the
-restrictions accumulated from all End Entity Name Restrictions
-extensions in the certification path as follows:
+restrictions in the immediate issuer's extension as follows:
 
- * If any `permittedSubtrees` was provided, the `dNSName` entry
-   MUST match at least one of those permitted subtree base values.
+ * If `permittedSubtrees` is present, the `dNSName` entry MUST
+   match at least one of those permitted subtree base values.
 
- * For every `excludedSubtrees` entry provided by any CA in the
-   path that bears the extension, the `dNSName` entry MUST NOT
-   match that excluded subtree base value.
+ * For every entry in `excludedSubtrees`, the `dNSName` entry MUST
+   NOT match that excluded subtree base value.
 
 An excluded subtree base value (which contains no wildcard) is treated
 as the reference identifier, and the end entity certificate's
