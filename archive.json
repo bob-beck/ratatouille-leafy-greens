@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-06-23T04:08:29.226291+00:00",
+  "timestamp": "2026-06-25T00:53:03.692229+00:00",
   "repo": "bob-beck/ratatouille-leafy-greens",
   "labels": [
     {
@@ -147,24 +147,26 @@
       "id": "PR_kwDOSVR4Ic7pYuxk",
       "title": "Improve restrictions on expanding constraints",
       "url": "https://github.com/bob-beck/ratatouille-leafy-greens/pull/5",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "bob-beck",
       "authorAssociation": "OWNER",
       "assignees": [],
       "labels": [],
       "body": "After a discussion with David Benjamin, I was reminded of the better way to do this.\r\n\r\nIn this manner a chain builder can enforce each step, but the leaf need only be checked against it's signer.",
       "createdAt": "2026-06-22T21:55:29Z",
-      "updatedAt": "2026-06-23T02:50:16Z",
+      "updatedAt": "2026-06-24T17:37:06Z",
       "baseRepository": "bob-beck/ratatouille-leafy-greens",
       "baseRefName": "main",
       "baseRefOid": "ee809f4af1b2d19ef2d2a6366217b0c68c790d31",
       "headRepository": "bob-beck/ratatouille-leafy-greens",
       "headRefName": "subtree-improvements",
-      "headRefOid": "c82edb01f8fe38ad5526b4b4258f221adcc2afcb",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "df21ed3321bf3a715f4c7388fbaeb0710d2e1096",
+      "closedAt": "2026-06-24T17:37:06Z",
+      "mergedAt": "2026-06-24T17:37:06Z",
+      "mergedBy": "bob-beck",
+      "mergeCommit": {
+        "oid": "18d53afdb083d4ad44eab3b0a036a19ae6e02fd0"
+      },
       "comments": [
         {
           "author": "ounsworth",
@@ -179,9 +181,51 @@
           "body": "I find this wording hard to follow, particularly because I have to pause reading this sentence, go read 5280::4.2.1.10 (which is 3 pages!!), then come back and finish reading this sentence.\r\n\r\n> `permittedSubtrees`, and every entry in the issued CA's\r\n`permittedSubtrees` MUST be contained, in the sense of {{RFC5280}}\r\nsection 4.2.1.10, in some entry of the issuer's `permittedSubtrees`.\r\n\r\nReferencing 5280::4.2.1.10 is fine, but can you please inline the salient bit so that this paragraph is self-contained. Maybe:\r\n\r\n> ... the 'permittedSubtrees' list MUST be equal to or a subset of the 'permittedSubtrees' list in its issuer's certificate. That means every entry in the issued CA's\r\n`permittedSubtrees` MUST be contained, in the sense of {{RFC5280}}\r\nsection 4.2.1.10, in some entry of the issuer's `permittedSubtrees`. Entries that appear in the issuer's certificate MAY be dropped from the list in the issued certificate in order to restrict the list.",
           "createdAt": "2026-06-23T02:50:16Z",
           "updatedAt": "2026-06-23T02:50:16Z"
+        },
+        {
+          "author": "bob-beck",
+          "authorAssociation": "OWNER",
+          "body": "It doesn't really have to walk the path, effectively, it can check this as it is building a path. A candidate certificate during path building that doesn't conform to those rules can be discarded as an option.  I.E. if I have B signed by A, both with the extension, and B's constraints don't conform to A's, B does not get put in a path where it is signed by A. \r\n\r\nbut the language isn't really clear.. pondering rewording. \r\n",
+          "createdAt": "2026-06-23T14:47:05Z",
+          "updatedAt": "2026-06-23T14:47:05Z"
+        },
+        {
+          "author": "bob-beck",
+          "authorAssociation": "OWNER",
+          "body": "> I find this wording hard to follow, particularly because I have to pause reading this sentence, go read 5280::4.2.1.10 (which is 3 pages!!), then come back and finish reading this sentence.\r\n> \r\n> > `permittedSubtrees`, and every entry in the issued CA's\r\n> > `permittedSubtrees` MUST be contained, in the sense of {{RFC5280}}\r\n> > section 4.2.1.10, in some entry of the issuer's `permittedSubtrees`.\r\n> \r\n> Referencing 5280::4.2.1.10 is fine, but can you please inline the salient bit so that this paragraph is self-contained. Maybe:\r\n> \r\n> > ... the 'permittedSubtrees' list MUST be equal to or a subset of the 'permittedSubtrees' list in its issuer's certificate. That means every entry in the issued CA's\r\n> > `permittedSubtrees` MUST be contained, in the sense of {{RFC5280}}\r\n> > section 4.2.1.10, in some entry of the issuer's `permittedSubtrees`. Entries that appear in the issuer's certificate MAY be dropped from the list in the issued certificate in order to restrict the list.\r\n\r\ntry now.\r\n",
+          "createdAt": "2026-06-23T18:23:18Z",
+          "updatedAt": "2026-06-23T18:23:18Z"
+        },
+        {
+          "author": "bob-beck",
+          "authorAssociation": "OWNER",
+          "body": "I ripped out some of the speculative language about when this is enforced. it doesn't matter when, as long as the implementation does it.\r\n",
+          "createdAt": "2026-06-23T18:31:59Z",
+          "updatedAt": "2026-06-23T18:31:59Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Nailed it. Concise and clear. :+1: \r\n\r\nAlso; just don't mention the optimization of check-on-first-use. Clever implementers will figure that out.\r\n\r\n:ship: -it",
+          "createdAt": "2026-06-24T04:46:48Z",
+          "updatedAt": "2026-06-24T04:46:48Z"
         }
       ],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOSVR4Ic8AAAABD75Hqg",
+          "commit": {
+            "abbreviatedOid": "df21ed3"
+          },
+          "author": "ounsworth",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-06-24T04:47:11Z",
+          "updatedAt": "2026-06-24T04:47:11Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 6,
@@ -195,7 +239,7 @@
       "labels": [],
       "body": "Using a critical extension as a marker that they are supported, and solving the wildcard problem that way.\r\n\r\nOnly gets to solve the name constraint problem, not tag on other improvements to the name constraint processing. \r\n\r\n(and requires us to rev 5280)\r\n\r\nSuggested by a chat with David Benjamin",
       "createdAt": "2026-06-22T22:15:13Z",
-      "updatedAt": "2026-06-23T02:41:08Z",
+      "updatedAt": "2026-06-24T17:36:06Z",
       "baseRepository": "bob-beck/ratatouille-leafy-greens",
       "baseRefName": "main",
       "baseRefOid": "ee809f4af1b2d19ef2d2a6366217b0c68c790d31",
@@ -213,6 +257,48 @@
           "body": "Let me get this straight -- you're saying to trash the thing defined in this document, and add a critical flag extension whose presence changes the processing rules of 5280's NameConstraints extn. That's certainly \"Updates 5280\", not \"Amends 5280\".\r\n\r\nI could see an approach like that -- maybe -- if the flag ext was non-critical so that the same cert was simultaneously valid to old clients under the old rules and to new clients under the new rules, but without the backwards-compat goal, that just seems messy for no gain?\r\n\r\nI assume you would eventually pick one or the other and not leave both in the document?",
           "createdAt": "2026-06-23T02:39:40Z",
           "updatedAt": "2026-06-23T02:41:08Z"
+        },
+        {
+          "author": "bob-beck",
+          "authorAssociation": "OWNER",
+          "body": "No, the point of being able to add the critical flag is to get what you otherwise only get with the new critical extension, the ability of the CA to decide \"hey I really want to meaningfully restrict this key with excluded subtrees, and It might sign wildcards - and I don't want anything it signs accepted by any client that doesn't understand the wildcard semantics for name constraints\". \r\n\r\nEffectively, it's a hacky way to tie the update to the name constraint behaviour to the update of 5280, instead of making a new \"name constraint like\" thing for TLS, that still preserves the property of \"a way for CA's to know it will be enforced\". \r\n\r\nIf let's say the wildcard in dns name constraint behavoiur was actually spec'ed in RFC 5280 bis 27, you could think of the extension as effectively meaning \"you understand this extension only of you are conformant to 5280 bis 27 - aka I require you to understand 5280 bis 27 to corrrectly deal with this certificate\".  \r\n",
+          "createdAt": "2026-06-23T14:43:36Z",
+          "updatedAt": "2026-06-23T14:43:36Z"
+        },
+        {
+          "author": "bob-beck",
+          "authorAssociation": "OWNER",
+          "body": "and yes, for the purpose of this document, we're not picking that alternative, but for the purpose of a discussion in lamps or whatever, mention it and the differences.\r\n",
+          "createdAt": "2026-06-23T19:06:42Z",
+          "updatedAt": "2026-06-23T19:06:42Z"
+        },
+        {
+          "author": "davidben",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I talked a bit with @rolandshoemaker, who has also been spending a lot of time with name constraints recently, and I think I prefer this approach.\r\n\r\nSo, ultimately, the problem here is that a DNS excludedSubtree, as described in RFC 5280, is basically broken. Faced with relying parties that implement RFC 5280 and wildcard DNS SANs, it is not possible for a CA to express a DNS excludedSubtree in a way that means anything. An excludedSubtree of `foo.example.com` *should* have forbidden a SAN of `*.example.com`, but it does not. Some X.509 software got this right anyway, but most did not until recently. (There's also silliness where DNS wildcard SANs, in practice implemented at the X.509 layer, is only specified in RFC 9525.)\r\n\r\nTo fix this, we could either:\r\n\r\n1. Define a second name constraints extension, fix this, and bundle in any other name constraint improvements we might want. Get relying parties to implement this extension. Use criticality to block older relying parties.\r\n\r\n2. Update RFC 5280 to tighten the semantics of this particular issue, punt bigger name constraint fixes. Get relying parties to implement the new semantics. This is not gated on a flag or anything, we say you should ship an update to fix this spec bug. (Several verifiers have already done this. I know some that have done this for years.) Use a separate requireWildcardAwareNameConstraints extension to block older relying parties.\r\n\r\nThe cost of (1) is we'll basically have two name constraints extensions indefinitely. I don't think relying parties will be able to drop support for name constraints v1.\r\n\r\nThe cost of (2) is we have to deal with the ambiguity of whether RPs have the fixed or broken semantics, and we don't get to apply any of the bigger fixes, because we have to stay generally compatible.\r\n\r\nI do have many gripes with name constraints. (Roland and I have a write-up to publish on how to check them without it becoming an O(N^2) DoS vector.) But they're mostly of the performance/DoS variety, and (1) doesn't actually help with those. As long as relying parties have to implement the first name constraints, the DoS vector is there and we need to figure out how to implement it efficiently. So I'm not offended by having to punt bigger fixes, at least right now. (We can always introduce name constraints v2 later.) And, all else equal, I'd rather have one variant of the extension to implement than two.\r\n\r\nRegarding compatibility, the two approaches give you the same tools. There are three categories of RPs, not two:\r\n\r\na. Relying parties that implement RFC 5280 today\r\nb. Relying parties that implement the fixed semantics today\r\nc. Relying parties that implement whatever new critical extension defined in (1) and (2)\r\n\r\nAs a CA that wishes to express a DNS excludedSubtree, you have to deal with the fact that category (a) cannot enforce your constraint correctly. Categories (b) and (c) are fine. But you can't distinguish (a) and (b) by criticality. You can either:\r\n\r\n**Fail closed and have (a) reject your certificates**\r\n\r\nIf you want to fail closed:\r\n1. In design (1), use critical nameConstraintsV2\r\n2. In design (2), use critical nameConstraints and critical requireWildcardAwareNameConstraints\r\n\r\nIn both cases, you lose compatibility with (a) and also lose compatibility with (b), even though (b) would actually have been fine.\r\n\r\n**Fail open and have (a) accept your certificates, _even though your constraint isn't enforced_**\r\n\r\nIf you want to fail open:\r\n1. In design (1), use non-critical nameConstraintsV2 and equivalent critical nameConstraintsV1 extension\r\n2. In design (2), use critical nameConstraints and don't include requireWildcardAwareNameConstraints\r\n\r\nIn both cases, you keep compatibility with (a) and (b) but your constraint will not be enforced by (a). In design (1), you end up doubling up the constraint.\r\n\r\n**Assume (a) doesn't exist**\r\n\r\nYou might know all your RPs are new enough:\r\n* Maybe you're a more controled deployment and can make sure your RPs are all updated past some hotfix\r\n* Maybe it's been 10 years since this document is published and you can reasonably assume everyone's fixed their verifiers\r\n* Maybe you're a CA that uses some new algorithm and that puts a lower bound on the age of the verifier software\r\n\r\nIf you don't have to worry about (a), then you can pick the simplest option:\r\n1. In design (1), use critical nameConstraintsV2\r\n2. In design (2), use critical nameConstraints and don't include requireWildcardAwareNameConstraints\r\n\r\nBut here the simplest option for design (1) sacrifices RPs in category (b).\r\n\r\n---\r\n\r\nSo we actually just get the same capabilities in both. We update RFC 5280 to tell RPs to implement the new behavior. That starts the trasition clock. Mid-transition, requireWildcardAwareNameConstraints is available for folks who want to fail closed (at the cost of breaking more stuff), but in the future, CAs can stop needing to include it.\r\n\r\nWhile this does not give an opportunity to make big, incompatible changes to name constraints, it gives us an opportunity to clarify other things:\r\n\r\n* The core semantics of DNS wildcards should move from 9525 to 5280\r\n* Edge cases of email and URI name constraints are a bit underspecified right now\r\n* Maybe we write down how to check name constraints without it being a DoS vector...",
+          "createdAt": "2026-06-23T20:59:41Z",
+          "updatedAt": "2026-06-23T20:59:41Z"
+        },
+        {
+          "author": "bob-beck",
+          "authorAssociation": "OWNER",
+          "body": "your last three points sum up the bulk of my gripes. \n\n\nfundamentally, I have written this down on the assumption it would be not be wanted to rev 5280 for this, particularly the key thing in my mind being that the possibly \"changing\" semantics of a 5280 defined critical extension by nebulous external factors are the core problem \n\nThe other improvements are simply to not waste the opportunity if we are solving it this way. \n\nSo I am fine with either approach (although I think for purposes of this doc that means I should merge this pr) ",
+          "createdAt": "2026-06-24T14:47:55Z",
+          "updatedAt": "2026-06-24T14:47:55Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Ultimately, I'm ok with either option too. @davidben makes all good points.\r\n\r\nI am somewhat attracted by the simplifications that Bob's EENR does not apply to CNs and does not apply to the CA certs themselves. But those might not be enough of a win to justify a whole new thing.",
+          "createdAt": "2026-06-24T15:10:45Z",
+          "updatedAt": "2026-06-24T15:10:45Z"
+        },
+        {
+          "author": "bob-beck",
+          "authorAssociation": "OWNER",
+          "body": "> Ultimately, I'm ok with either option too. @davidben makes all good points.\r\n> \r\n> I am somewhat attracted by the simplifications that Bob's EENR does not apply to CNs and does not apply to the CA certs themselves. But those might not be enough of a win to justify a whole new thing.\r\n\r\nI mean, that's sort of why this exits, I wanted this conversation to be had, so assuming we point at this as some of the discussion and get LAMPS to address this somehow that's the goal.  I'm not proud, I don't care if it's this document or the other. let the group decide.\r\n",
+          "createdAt": "2026-06-24T17:36:06Z",
+          "updatedAt": "2026-06-24T17:36:06Z"
         }
       ],
       "reviews": []
@@ -222,24 +308,26 @@
       "id": "PR_kwDOSVR4Ic7paRA9",
       "title": "Add a reference to OpenSSL's warnings about excluded name constraints",
       "url": "https://github.com/bob-beck/ratatouille-leafy-greens/pull/7",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "bob-beck",
       "authorAssociation": "OWNER",
       "assignees": [],
       "labels": [],
       "body": "Will change to the man page ref when they get around to landing it. ",
       "createdAt": "2026-06-22T23:18:19Z",
-      "updatedAt": "2026-06-23T02:51:40Z",
+      "updatedAt": "2026-06-23T14:57:06Z",
       "baseRepository": "bob-beck/ratatouille-leafy-greens",
       "baseRefName": "main",
       "baseRefOid": "ee809f4af1b2d19ef2d2a6366217b0c68c790d31",
       "headRepository": "bob-beck/ratatouille-leafy-greens",
       "headRefName": "openssl-ref",
-      "headRefOid": "a478d7c2c627be40ded1ecd21fc57ae77b12b28d",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "74c749d85596d15f9d4c529ab7a0e835a4ae016f",
+      "closedAt": "2026-06-23T14:57:06Z",
+      "mergedAt": "2026-06-23T14:57:06Z",
+      "mergedBy": "bob-beck",
+      "mergeCommit": {
+        "oid": "ea0c80965d2007540b33d8c61c162de1307fc1ea"
+      },
       "comments": [
         {
           "author": "ounsworth",
@@ -247,6 +335,13 @@
           "body": "Fine.\r\n\r\nThough idnits will complain about an unused reference; so you should jam a reference to that somewhere in the Intro.",
           "createdAt": "2026-06-23T02:51:01Z",
           "updatedAt": "2026-06-23T02:51:40Z"
+        },
+        {
+          "author": "bob-beck",
+          "authorAssociation": "OWNER",
+          "body": "the joys of inscrutable errors..\r\n",
+          "createdAt": "2026-06-23T14:56:59Z",
+          "updatedAt": "2026-06-23T14:56:59Z"
         }
       ],
       "reviews": [
@@ -264,6 +359,34 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 8,
+      "id": "PR_kwDOSVR4Ic7qOYpR",
+      "title": "update openssl doc link to real location",
+      "url": "https://github.com/bob-beck/ratatouille-leafy-greens/pull/8",
+      "state": "MERGED",
+      "author": "bob-beck",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Make the link point to the real docs now that they have landed.\r\n",
+      "createdAt": "2026-06-24T17:48:16Z",
+      "updatedAt": "2026-06-24T17:49:00Z",
+      "baseRepository": "bob-beck/ratatouille-leafy-greens",
+      "baseRefName": "main",
+      "baseRefOid": "18d53afdb083d4ad44eab3b0a036a19ae6e02fd0",
+      "headRepository": "bob-beck/ratatouille-leafy-greens",
+      "headRefName": "bugs",
+      "headRefOid": "a86b3c9ae7795bf5cf4cf0678f7aba7c992d2f61",
+      "closedAt": "2026-06-24T17:49:00Z",
+      "mergedAt": "2026-06-24T17:49:00Z",
+      "mergedBy": "bob-beck",
+      "mergeCommit": {
+        "oid": "9f0cba55632cf08f030ae4bd4e92c50aa0cfc76d"
+      },
+      "comments": [],
+      "reviews": []
     }
   ]
 }
