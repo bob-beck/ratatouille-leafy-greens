@@ -5,8 +5,8 @@
 TLS?                                                             B. Beck
 Internet-Draft                                                   OpenSSL
 Intended status: Standards Track                            M. Ounsworth
-Expires: 26 December 2026                        Cryptic Forest Software
-                                                            24 June 2026
+Expires: 27 December 2026                        Cryptic Forest Software
+                                                            25 June 2026
 
 
               Leafy Greens - End Entity Name Restrictions
@@ -58,7 +58,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 26 December 2026.
+   This Internet-Draft will expire on 27 December 2026.
 
 Copyright Notice
 
@@ -92,9 +92,10 @@ Table of Contents
      6.2.  Informative References
    Appendix A.  Alternatives Considered
      A.1.  Amending RFC 5280 or RFC 9525 to define wildcard semantics
-     A.2.  Prohibiting wildcards in chains with excluded dNSName
+     A.2.  Amending RFC 5280 with a critical marker extension
+     A.3.  Prohibiting wildcards in chains with excluded dNSName
            constraints
-     A.3.  Just don't fix it
+     A.4.  Just don't fix it
    Acknowledgments
    Authors' Addresses
 
@@ -396,7 +397,24 @@ A.1.  Amending RFC 5280 or RFC 9525 to define wildcard semantics
    have no way to detect a verifier still applying the original
    algorithm.
 
-A.2.  Prohibiting wildcards in chains with excluded dNSName constraints
+A.2.  Amending RFC 5280 with a critical marker extension
+
+   The wildcard matching semantics defined in this draft could instead
+   be defined in an update to [RFC5280] section 4.2.1.10, paired with a
+   new critical extension that a CA places in its certificates to
+   require those updated semantics.  A verifier that has not adopted the
+   update does not recognize the marker and rejects the certificate as
+   critical-and-unknown; a verifier that has adopted it applies the new
+   matching to the existing nameConstraints extension.  This gives the
+   same enforcement guarantee as EENR without introducing a parallel
+   constraint extension, at the cost of an [RFC5280] revision.  This
+   approach could not deliver the end-entity hygiene improvements
+   described in Section 3.5.  It also commits [RFC5280] to a single
+   wildcard matching algorithm across every protocol that uses dNSName
+   name constraints, on the assumption that [RFC9525]'s semantics are
+   appropriate for all of them.
+
+A.3.  Prohibiting wildcards in chains with excluded dNSName constraints
 
    The security failure caused by the matching ambiguity arises only
    when both wildcard dNSName SAN entries and dNSName excludedSubtrees
@@ -411,7 +429,7 @@ A.2.  Prohibiting wildcards in chains with excluded dNSName constraints
    vulnerable in proportion to the verifier population that has not been
    updated.
 
-A.3.  Just don't fix it
+A.4.  Just don't fix it
 
    Acknowledge the possibility that with the default [RFC5280] matching
    semantics, wildcards will not match names in an excluded subtree name

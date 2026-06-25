@@ -1060,7 +1060,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Beck &amp; Ounsworth</td>
-<td class="center">Expires 26 December 2026</td>
+<td class="center">Expires 27 December 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1073,12 +1073,12 @@ svg {
 <dd class="internet-draft">draft-leafy-greens-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-06-24" class="published">24 June 2026</time>
+<time datetime="2026-06-25" class="published">25 June 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-12-26">26 December 2026</time></dd>
+<dd class="expires"><time datetime="2026-12-27">27 December 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1142,7 +1142,7 @@ TLS client and TLS server authentication.<a href="#section-abstract-1" class="pi
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 26 December 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 27 December 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1224,10 +1224,13 @@ TLS client and TLS server authentication.<a href="#section-abstract-1" class="pi
                 <p id="section-toc.1-1.7.2.1.1"><a href="#appendix-A.1" class="auto internal xref">A.1</a>.  <a href="#name-amending-rfc-5280-or-rfc-95" class="internal xref">Amending RFC 5280 or RFC 9525 to define wildcard semantics</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2">
-                <p id="section-toc.1-1.7.2.2.1"><a href="#appendix-A.2" class="auto internal xref">A.2</a>.  <a href="#name-prohibiting-wildcards-in-ch" class="internal xref">Prohibiting wildcards in chains with excluded dNSName constraints</a></p>
+                <p id="section-toc.1-1.7.2.2.1"><a href="#appendix-A.2" class="auto internal xref">A.2</a>.  <a href="#name-amending-rfc-5280-with-a-cr" class="internal xref">Amending RFC 5280 with a critical marker extension</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.3">
-                <p id="section-toc.1-1.7.2.3.1"><a href="#appendix-A.3" class="auto internal xref">A.3</a>.  <a href="#name-just-dont-fix-it" class="internal xref">Just don't fix it</a></p>
+                <p id="section-toc.1-1.7.2.3.1"><a href="#appendix-A.3" class="auto internal xref">A.3</a>.  <a href="#name-prohibiting-wildcards-in-ch" class="internal xref">Prohibiting wildcards in chains with excluded dNSName constraints</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.4">
+                <p id="section-toc.1-1.7.2.4.1"><a href="#appendix-A.4" class="auto internal xref">A.4</a>.  <a href="#name-just-dont-fix-it" class="internal xref">Just don't fix it</a></p>
 </li>
             </ul>
 </li>
@@ -1613,39 +1616,61 @@ would have no way to detect a verifier still applying the
 original algorithm.<a href="#appendix-A.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="prohibiting-wildcards-in-chains-with-excluded-dnsname-constraints">
+<div id="amending-rfc-5280-with-a-critical-marker-extension">
 <section id="appendix-A.2">
-        <h3 id="name-prohibiting-wildcards-in-ch">
-<a href="#appendix-A.2" class="section-number selfRef">A.2. </a><a href="#name-prohibiting-wildcards-in-ch" class="section-name selfRef">Prohibiting wildcards in chains with excluded dNSName constraints</a>
+        <h3 id="name-amending-rfc-5280-with-a-cr">
+<a href="#appendix-A.2" class="section-number selfRef">A.2. </a><a href="#name-amending-rfc-5280-with-a-cr" class="section-name selfRef">Amending RFC 5280 with a critical marker extension</a>
         </h3>
-<p id="appendix-A.2-1">The security failure caused by the matching ambiguity arises only
+<p id="appendix-A.2-1">The wildcard matching semantics defined in this draft could
+instead be defined in an update to <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> section 4.2.1.10,
+paired with a new critical extension that a CA places in its
+certificates to require those updated semantics. A verifier that
+has not adopted the update does not recognize the marker and
+rejects the certificate as critical-and-unknown; a verifier that
+has adopted it applies the new matching to the existing
+<code>nameConstraints</code> extension. This gives the same enforcement
+guarantee as EENR without introducing a parallel constraint
+extension, at the cost of an <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> revision. This approach
+could not deliver the end-entity hygiene improvements described
+in <a href="#restrictions-on-end-entity-certificates" class="auto internal xref">Section 3.5</a>. It also commits
+<span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> to a single wildcard matching algorithm across every
+protocol that uses <code>dNSName</code> name constraints, on the assumption
+that <span>[<a href="#RFC9525" class="cite xref">RFC9525</a>]</span>'s semantics are appropriate for all of them.<a href="#appendix-A.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="prohibiting-wildcards-in-chains-with-excluded-dnsname-constraints">
+<section id="appendix-A.3">
+        <h3 id="name-prohibiting-wildcards-in-ch">
+<a href="#appendix-A.3" class="section-number selfRef">A.3. </a><a href="#name-prohibiting-wildcards-in-ch" class="section-name selfRef">Prohibiting wildcards in chains with excluded dNSName constraints</a>
+        </h3>
+<p id="appendix-A.3-1">The security failure caused by the matching ambiguity arises only
 when both wildcard <code>dNSName</code> SAN entries and <code>dNSName</code>
           <code>excludedSubtrees</code> are present in the same certification path:
 literal <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> matching can accept a wildcard SAN whose TLS
 expansion covers a name the excluded subtree was intended to
-prevent. An <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> amendment could prohibit this combination.<a href="#appendix-A.2-1" class="pilcrow">¶</a></p>
-<p id="appendix-A.2-2">Such an amendment suffers the same deployment problem as defining
+prevent. An <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> amendment could prohibit this combination.<a href="#appendix-A.3-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.3-2">Such an amendment suffers the same deployment problem as defining
 new semantics: a verifier that has not adopted it will not enforce
 the prohibition. Certificates issued under the old understanding
 remain vulnerable in proportion to the verifier population that
-has not been updated.<a href="#appendix-A.2-2" class="pilcrow">¶</a></p>
+has not been updated.<a href="#appendix-A.3-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="just-dont-fix-it">
-<section id="appendix-A.3">
+<section id="appendix-A.4">
         <h3 id="name-just-dont-fix-it">
-<a href="#appendix-A.3" class="section-number selfRef">A.3. </a><a href="#name-just-dont-fix-it" class="section-name selfRef">Just don't fix it</a>
+<a href="#appendix-A.4" class="section-number selfRef">A.4. </a><a href="#name-just-dont-fix-it" class="section-name selfRef">Just don't fix it</a>
         </h3>
-<p id="appendix-A.3-1">Acknowledge the possibility that with the default <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> matching
+<p id="appendix-A.4-1">Acknowledge the possibility that with the default <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> matching
 semantics, wildcards will not match names in an excluded subtree name
 constraint that could in turn match the wildcard and be accepted for a
 TLS connection.  Document that excluded name constraints should not be
 relied on to limit what a CA can sign for in any PKI where wildcards
 are not excluded from use by some other means. This is currently the
-approach being taken in <span>[<a href="#OPENSSL-NC" class="cite xref">OPENSSL-NC</a>]</span>.<a href="#appendix-A.3-1" class="pilcrow">¶</a></p>
-<p id="appendix-A.3-2">The limitation of this is that certificates used for TLS in the
+approach being taken in <span>[<a href="#OPENSSL-NC" class="cite xref">OPENSSL-NC</a>]</span>.<a href="#appendix-A.4-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.4-2">The limitation of this is that certificates used for TLS in the
 presence of wildcards may only be constrained reliably by using only
-permitted subtree entries.<a href="#appendix-A.3-2" class="pilcrow">¶</a></p>
+permitted subtree entries.<a href="#appendix-A.4-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
