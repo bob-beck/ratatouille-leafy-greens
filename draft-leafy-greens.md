@@ -342,6 +342,24 @@ verifiers consuming it have adopted the updated semantics, and
 would have no way to detect a verifier still applying the
 original algorithm.
 
+## Amending RFC 5280 with a critical marker extension
+
+The wildcard matching semantics defined in this draft could
+instead be defined in an update to {{RFC5280}} section 4.2.1.10,
+paired with a new critical extension that a CA places in its
+certificates to require those updated semantics. A verifier that
+has not adopted the update does not recognize the marker and
+rejects the certificate as critical-and-unknown; a verifier that
+has adopted it applies the new matching to the existing
+`nameConstraints` extension. This gives the same enforcement
+guarantee as EENR without introducing a parallel constraint
+extension, at the cost of an {{RFC5280}} revision. This approach
+could not deliver the end-entity hygiene improvements described
+in {{restrictions-on-end-entity-certificates}}. It also commits
+{{RFC5280}} to a single wildcard matching algorithm across every
+protocol that uses `dNSName` name constraints, on the assumption
+that {{RFC9525}}'s semantics are appropriate for all of them.
+
 ## Prohibiting wildcards in chains with excluded dNSName constraints
 
 The security failure caused by the matching ambiguity arises only
