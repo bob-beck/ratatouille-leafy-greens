@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-06-25T00:53:03.692229+00:00",
+  "timestamp": "2026-06-28T00:54:39.695051+00:00",
   "repo": "bob-beck/ratatouille-leafy-greens",
   "labels": [
     {
@@ -232,24 +232,26 @@
       "id": "PR_kwDOSVR4Ic7pZKFV",
       "title": "Add the alternative of putting these defintions in 5280",
       "url": "https://github.com/bob-beck/ratatouille-leafy-greens/pull/6",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "bob-beck",
       "authorAssociation": "OWNER",
       "assignees": [],
       "labels": [],
       "body": "Using a critical extension as a marker that they are supported, and solving the wildcard problem that way.\r\n\r\nOnly gets to solve the name constraint problem, not tag on other improvements to the name constraint processing. \r\n\r\n(and requires us to rev 5280)\r\n\r\nSuggested by a chat with David Benjamin",
       "createdAt": "2026-06-22T22:15:13Z",
-      "updatedAt": "2026-06-24T17:36:06Z",
+      "updatedAt": "2026-06-26T15:10:18Z",
       "baseRepository": "bob-beck/ratatouille-leafy-greens",
       "baseRefName": "main",
       "baseRefOid": "ee809f4af1b2d19ef2d2a6366217b0c68c790d31",
       "headRepository": "bob-beck/ratatouille-leafy-greens",
       "headRefName": "critical-marker",
       "headRefOid": "735f3364f80df827a52cf296b7d8324c7a4d0494",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2026-06-25T15:55:03Z",
+      "mergedAt": "2026-06-25T15:55:03Z",
+      "mergedBy": "bob-beck",
+      "mergeCommit": {
+        "oid": "4d058a99eb3601edc7b11a1de3a5c7c89903829a"
+      },
       "comments": [
         {
           "author": "ounsworth",
@@ -299,6 +301,27 @@
           "body": "> Ultimately, I'm ok with either option too. @davidben makes all good points.\r\n> \r\n> I am somewhat attracted by the simplifications that Bob's EENR does not apply to CNs and does not apply to the CA certs themselves. But those might not be enough of a win to justify a whole new thing.\r\n\r\nI mean, that's sort of why this exits, I wanted this conversation to be had, so assuming we point at this as some of the discussion and get LAMPS to address this somehow that's the goal.  I'm not proud, I don't care if it's this document or the other. let the group decide.\r\n",
           "createdAt": "2026-06-24T17:36:06Z",
           "updatedAt": "2026-06-24T17:36:06Z"
+        },
+        {
+          "author": "davidben",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Oh yeah, definitely on board with exploring what we'd put in a new name constraints if we wanted to. I'm leaning towards it probably not being worth it, but maybe there'll be enough worthwhile incompatible changes to justify it.\r\n\r\n(Though I do think, whether or not v2 exists, it's prudent to change RPs to interpret v1 in a way that fixes the excludedSubtrees. The existing semantics are clearly just wrong, and the fix won't break anything.)",
+          "createdAt": "2026-06-25T21:12:06Z",
+          "updatedAt": "2026-06-25T21:12:06Z"
+        },
+        {
+          "author": "ounsworth",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I guess the \"fix v1\" path leads to eventually filing CVEs against all the clients that still parse it wrong -- which one could argue is the correct path.",
+          "createdAt": "2026-06-26T15:05:33Z",
+          "updatedAt": "2026-06-26T15:05:33Z"
+        },
+        {
+          "author": "davidben",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Yeah, the LLMs have gotten very excited about name constraints so probably everyone's been getting these already. (But the LLMs seem to not be reading specs so they're just vibing name constraints semantics hehehehe.)",
+          "createdAt": "2026-06-26T15:10:18Z",
+          "updatedAt": "2026-06-26T15:10:18Z"
         }
       ],
       "reviews": []
