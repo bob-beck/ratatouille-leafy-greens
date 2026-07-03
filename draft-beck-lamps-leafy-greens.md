@@ -2,26 +2,26 @@
 title: "Leafy Greens - End Entity Name Restrictions"
 abbrev: "EENR"
 category: std
-docname: draft-leafy-greens-latest
+docname: draft-beck-lamps-leafy-greens-latest
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
 date:
 consensus: true
 v: 3
 area: Security
-workgroup: TLS?
+workgroup: LAMPS
 keyword:
   TLS
   PKIX
   X.509
   name constraints
 venue:
-  group: TBD?
+  group: LAMPS
   type: Working Group
   mail: beck@openssl.org
   arch: https://example.com/WG
   github: "bob-beck/ratatouille-leafy-greens"
-  latest: "https://bob-beck.github.io/ratatouille-leafy-greens/draft-leafy-greens.html"
+  latest: "https://bob-beck.github.io/ratatouille-leafy-greens/draft-beck-lamps-leafy-greens.html"
 
 author:
 -
